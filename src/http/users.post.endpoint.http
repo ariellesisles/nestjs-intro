@@ -1,5 +1,6 @@
 POST http://localhost:3000/users
-CONTENT-Type: applciation/json
+CONTENT-Type: application/json
+
 {
 
     "firstName": "jane",

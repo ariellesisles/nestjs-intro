@@ -1,4 +1,13 @@
-import { Controller, Get, Param, Post, Query, Req } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Query,
+  Headers,
+  Ip,
+} from '@nestjs/common';
 
 @Controller('users')
 export class UsersController {
@@ -8,6 +17,9 @@ export class UsersController {
     @Query('limit') limit?: number,
     @Query('offset') offset?: number,
   ) {
+    console.log(id);
+    console.log(limit);
+    console.log(offset);
     if (id) {
       return 'Called get user by id endpoint';
     }
@@ -15,8 +27,14 @@ export class UsersController {
   }
 
   @Post()
-  public createUser(@Req() request: Request) {
+  public createUser(
+    @Body() request: any, 
+    @Headers() headers: any,
+    @Ip() ip : any
+) {
     console.log(request);
+    console.log(headers);
+    console.log(ip);
     return ' Called create user endpoint';
   }
 }
