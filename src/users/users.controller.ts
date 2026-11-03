@@ -8,6 +8,7 @@ import {
   Headers,
   Ip,
   ParseIntPipe,
+  DefaultValuePipe,
 } from '@nestjs/common';
 
 @Controller('users')
@@ -15,9 +16,10 @@ export class UsersController {
   @Get(['/', '/:id'])
   public getUsers(
     @Param('id') id?: number | undefined,
-    @Query('limit', ParseIntPipe) limit?: number,
-    @Query('offset', ParseIntPipe) offset?: number,
+    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit?: number,
+    @Query('page', ParseIntPipe, new DefaultValuePipe(1)) page?: number,
   ) {
+    console.log({ id, limit, page });
     if (id) {
       return 'Called get user by id endpoint';
     }
