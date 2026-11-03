@@ -7,19 +7,17 @@ import {
   Query,
   Headers,
   Ip,
+  ParseIntPipe,
 } from '@nestjs/common';
 
 @Controller('users')
 export class UsersController {
   @Get(['/', '/:id'])
   public getUsers(
-    @Param('id') id?: string,
-    @Query('limit') limit?: number,
-    @Query('offset') offset?: number,
+    @Param('id') id?: number | undefined,
+    @Query('limit', ParseIntPipe) limit?: number,
+    @Query('offset', ParseIntPipe) offset?: number,
   ) {
-    console.log(id);
-    console.log(limit);
-    console.log(offset);
     if (id) {
       return 'Called get user by id endpoint';
     }
@@ -28,10 +26,10 @@ export class UsersController {
 
   @Post()
   public createUser(
-    @Body() request: any, 
+    @Body() request: any,
     @Headers() headers: any,
-    @Ip() ip : any
-) {
+    @Ip() ip: any,
+  ) {
     console.log(request);
     console.log(headers);
     console.log(ip);
