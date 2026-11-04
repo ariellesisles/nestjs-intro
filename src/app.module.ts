@@ -2,9 +2,10 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
+import { PostsModule } from './posts/posts.module';
 
 @Module({
-  imports: [UsersModule], // import all the module in your nestJS
+  imports: [UsersModule, PostsModule], // import all the module in your nestJS
   controllers: [AppController],
   providers: [AppService],
 })

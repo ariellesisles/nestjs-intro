@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { GetUsersQueryDto } from '../users/dto/get-users-query.dto';
-import { GetUserParamsDto } from '../users/dto/get-user-params.dto';
 
 @Injectable()
 export class UsersService {
