@@ -1,7 +1,8 @@
-import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, Query } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { GetUserParamsDto } from './dto/get-user-params.dto';
 import { GetUsersQueryDto } from './dto/get-users-query.dto';
+import { PatchUserDto } from './dto/patch-user.dto';
 
 @Controller('users')
 export class UsersController {
@@ -21,5 +22,11 @@ export class UsersController {
   public createUser(@Body() createUserDto: CreateUserDto) {
     console.log(createUserDto instanceof CreateUserDto);
     return ' Called create user endpoint';
+  }
+
+  @Patch()
+  public patchUser(@Body() patchUserDto: PatchUserDto){
+    console.log(patchUserDto);
+    return "Called patch user endpoint"
   }
 }
