@@ -12,8 +12,10 @@ import { GetUserParamsDto } from './dto/get-user-params.dto';
 import { GetUsersQueryDto } from './dto/get-users-query.dto';
 import { PatchUserDto } from './dto/patch-user.dto';
 import { UsersService } from './providers/users.service';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('users')
+@ApiTags('Users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
