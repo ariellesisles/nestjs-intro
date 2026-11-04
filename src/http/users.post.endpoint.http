@@ -6,5 +6,5 @@ CONTENT-Type: application/json
     "firstName": "jane",
     "lastName": "Doe",
     "email":"janedoe@gmail.com",
-    "password": "password"
+    "password": "P@ssw0rd",
 }
