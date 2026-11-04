@@ -1,28 +1,20 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Param,
-  Post,
-  Query,
-  ParseIntPipe,
-  DefaultValuePipe,
-} from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
+import { GetUserParamsDto } from './dto/get-user-params.dto';
+import { GetUsersQueryDto } from './dto/get-users-query.dto';
 
 @Controller('users')
 export class UsersController {
-  @Get(['/', '/:id'])
-  public getUsers(
-    @Param('id') id?: number | undefined,
-    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit?: number,
-    @Query('page', ParseIntPipe, new DefaultValuePipe(1)) page?: number,
-  ) {
-    console.log({ id, limit, page });
-    if (id) {
-      return 'Called get user by id endpoint';
-    }
+  @Get()
+  public getUsers(@Query() getUsersQueryDto: GetUsersQueryDto) {
+    console.log(getUsersQueryDto);
     return 'Called get users enpoint';
+  }
+
+  @Get(':id')
+  public getUser(@Param() getUserParamsDto: GetUserParamsDto) {
+    console.log(getUserParamsDto);
+    return 'Called get user endpoint';
   }
 
   @Post()
