@@ -17,11 +17,10 @@ import { UsersService } from '../providers/users.service';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  
   @Get()
   public getUsers(@Query() getUsersQueryDto: GetUsersQueryDto) {
     console.log(getUsersQueryDto);
-    return 'Called get users enpoint';
+    return this.usersService.findAll(getUsersQueryDto);
   }
 
   @Get(':id')
