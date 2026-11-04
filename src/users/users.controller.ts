@@ -11,7 +11,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { GetUserParamsDto } from './dto/get-user-params.dto';
 import { GetUsersQueryDto } from './dto/get-users-query.dto';
 import { PatchUserDto } from './dto/patch-user.dto';
-import { UsersService } from '../providers/users.service';
+import { UsersService } from './providers/users.service';
 
 @Controller('users')
 export class UsersController {
