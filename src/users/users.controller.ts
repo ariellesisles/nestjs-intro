@@ -26,7 +26,7 @@ export class UsersController {
   @Get(':id')
   public getUser(@Param() getUserParamsDto: GetUserParamsDto) {
     console.log(getUserParamsDto);
-    return 'Called get user endpoint';
+    return this.usersService.findOneById(getUserParamsDto.id);
   }
 
   @Post()
