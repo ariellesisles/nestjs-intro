@@ -1,13 +1,25 @@
+import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsInt, IsOptional, Min } from 'class-validator';
 
 export class GetUsersQueryDto {
+  @ApiPropertyOptional({
+    description:
+      'The position of the page number that you want the API  to return',
+    type: 'number',
+    example: 10,
+  })
   @IsOptional()
   @Type(() => Number)
   @IsInt()
   @Min(1)
   page?: number = 1;
 
+  @ApiPropertyOptional({
+    description: 'The number of entries returned per query',
+    type: 'number',
+    example: 1,
+  })
   @IsOptional()
   @Type(() => Number)
   @IsInt()
