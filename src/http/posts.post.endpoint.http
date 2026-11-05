@@ -1,0 +1,20 @@
+POST http://localhost:3000/posts
+Content-Type: application/json
+
+
+{
+  "title":" Title",
+  "postType": "post" ,
+  "slug": "my-slug-2134",
+  "status": "draft",
+  "content": "test content",
+   "schema": "{\r\n    \"name\": \"Adeel Solangi\",\r\n    \"language\": \"Sindhi\"\r\n}",
+  "featuredImageUrl": "https://unsplash.com/photos/woman-at-the-controls-of-a-skid-steer-XHnS6_Q2_jo",
+  "publishedOn": "2026-11-04T23:08:01-08:00",
+  "tags": ["nestjs", "REST API"],
+  "metaOptions": [{
+    "key": "testKey",
+    "value":10
+  }]
+
+}
