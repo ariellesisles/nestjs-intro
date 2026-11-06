@@ -13,11 +13,26 @@ import { GetUsersQueryDto } from './dto/get-users-query.dto';
 import { PatchUserDto } from './dto/patch-user.dto';
 import { UsersService } from './providers/users.service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+
+
+/**
+ * Users Controller
+ */
 @ApiTags('Users')
 @Controller('users')
 export class UsersController {
+  /**
+   * Creates an instance of UsersController.
+   * @param {UsersService} usersService - Service handling user data operations.
+   */
   constructor(private readonly usersService: UsersService) {}
 
+  /**
+   * Retrieves paginated or filtered list of users based on query parameters
+   * @param {GetUsersQueryDto} getUsersQueryDto - Query filters, pagination for fetch users
+   * @returns {Promise<User[]> | User[]} An array of user objects matching the criteria.
+   * @throws {BadRequestException} When query parameters fail validation.
+   */
   @Get()
   @ApiOperation({ summary: 'Get all users' })
   @ApiResponse({
@@ -29,6 +44,14 @@ export class UsersController {
     return this.usersService.findAll(getUsersQueryDto);
   }
 
+  /**
+   * Retrieves a single user profile by their unique identifier.
+   *
+   * @async
+   * @param {GetUserParamsDto} getUserParamsDto - Path parameters containing the target user's ID.
+   * @returns {Promise<User> | User} The matching user object.
+   * @throws {NotFoundException} When the user with the specified ID does not exist.
+   */
   @Get(':id')
   @ApiOperation({ summary: 'Get user by ID' })
   @ApiResponse({
@@ -41,6 +64,14 @@ export class UsersController {
     return this.usersService.findOneById(getUserParamsDto.id);
   }
 
+  /**
+   * Creates a new user record in the system using the provided payload.
+   *
+   * @async
+   * @param {CreateUserDto} createUserDto - Data transfer object containing the new user's details.
+   * @returns {string | User} A success message or the newly created user object.
+   * @throws {BadRequestException} When required body fields are missing or invalid.
+   */
   @Post()
   @ApiOperation({ summary: 'Create a new user' })
   @ApiResponse({
@@ -54,6 +85,16 @@ export class UsersController {
     return 'Called create user endpoint';
   }
 
+
+  /**
+   * Partially updates an existing user record with the provided payload fields.
+   *
+   * @async
+   * @param {PatchUserDto} patchUserDto - Data transfer object containing fields to update.
+   * @returns {string | User} A success message or the updated user object.
+   * @throws {BadRequestException} When validation fails.
+   * @throws {NotFoundException} When the target user cannot be found.
+   */
   @Patch()
   @ApiOperation({
     summary: 'Patch user details',
