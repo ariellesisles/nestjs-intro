@@ -32,15 +32,18 @@ export class CreateUserDto {
   })
   @IsEmail()
   @IsNotEmpty()
+  @MaxLength(50)
   email: string;
 
   @ApiProperty({
-    description: "Minimum 8 characters, include atleast one uppercase and lowercase letter, one number and one special character.",
+    description:
+      'Minimum 8 characters, include atleast one uppercase and lowercase letter, one number and one special character.',
     required: true,
   })
   @IsString()
   @IsNotEmpty()
   @MinLength(8)
+  @MaxLength(50)
   @Matches(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?\d)(?=.*?[#?!@$%^&*-]).{8,}$/, {
     message:
       'Minimum 8 characters, including at least one uppercase letter, one lowercase letter, one number, and one special character.',
