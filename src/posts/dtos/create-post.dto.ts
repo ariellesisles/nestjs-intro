@@ -23,11 +23,11 @@ export class CreatePostDto {
     description: 'The title of the blog post',
     example: 'Understanding NestJS Validation',
     minLength: 3,
-    maxLength: 80,
+    maxLength: 255,
   })
   @IsString()
   @MinLength(3)
-  @MaxLength(80)
+  @MaxLength(255)
   @IsNotEmpty()
   title: string;
 
@@ -51,6 +51,7 @@ export class CreatePostDto {
     message:
       'A slug should be all in small letters and uses only "-" and without spaces. Example "my-url"',
   })
+  @MaxLength(255)
   slug: string;
 
   @ApiProperty({
@@ -86,6 +87,7 @@ export class CreatePostDto {
   })
   @IsOptional()
   @IsUrl()
+  @MaxLength(1024)
   featuredImageUrl?: string;
 
   @ApiProperty({
