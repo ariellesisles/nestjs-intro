@@ -45,6 +45,8 @@ export class PostsService {
    * @returns Post
    */
   public async create(@Body() createPostDto: CreatePostDto): Promise<Post> {
+    //Find authorId exists in users table
+
     //Create Post
     const post = this.postRepository.create(createPostDto);
 

@@ -1,12 +1,22 @@
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { GetUsersQueryDto } from '../dto/get-users-query.dto';
 import { AuthService } from '../../auth/providers/auth.service';
+import { InjectRepository } from '@nestjs/typeorm';
+import { User } from '../user.entity';
+import { Repository } from 'typeorm';
 
 /**
  * Users Service
  */
 @Injectable()
 export class UsersService {
+  constructor(
+    @Inject(forwardRef(() => AuthService))
+    private readonly authService: AuthService,
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
+  ) {}
+
   /**
    * Mock user list data
    */
@@ -20,10 +30,6 @@ export class UsersService {
    * Create UsersService instance
    * @param authService authentication service for verifying login status
    */
-  constructor(
-    @Inject(forwardRef(() => AuthService))
-    private readonly authService: AuthService,
-  ) {}
 
   /**
    *  Fetch all users if authenticated
@@ -43,7 +49,7 @@ export class UsersService {
    * @param id user ID
    * @returns user object
    */
-  public findOneById(id: number) {
-    return { fistName: 'John', email: 'John@gmail.com' };
+  public async findOneById(id: number) {
+    return await this.userRepository.findOneBy({ id });
   }
 }
