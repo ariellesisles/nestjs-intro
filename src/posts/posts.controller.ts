@@ -114,6 +114,13 @@ export class PostsController {
    * @param id
    * @returns boolean and ID that is deleted
    */
+  @ApiOperation({
+    summary: 'Delete Post',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Successfully deleted post',
+  })
   @Delete()
   public deletePost(@Query('id', ParseIntPipe) id: number) {
     return this.postsService.delete(id);

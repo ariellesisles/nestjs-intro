@@ -1,7 +1,14 @@
-import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  ManyToOne,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { PostStatus } from './enums/post-status.enum';
 import { PostType } from './enums/post-type.enum';
 import { MetaOption } from '../meta-options/meta-option.entity';
+import { User } from '../users/user.entity';
 
 @Entity()
 export class Post {
@@ -65,6 +72,9 @@ export class Post {
   publishedOn?: Date;
 
   tags?: string[];
+
+  @ManyToOne(() => User, (user) => user.posts)
+  author: User;
 
   @OneToOne(() => MetaOption, (metaOptions) => metaOptions.post, {
     cascade: true, // cascade :['insert', 'soft-remove']

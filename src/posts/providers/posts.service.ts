@@ -26,12 +26,16 @@ export class PostsService {
   /**
    * Find post  by ID
    *  @param id
-   * @returns
+   * @returns post object
    */
   public findPostById(id: number) {
     return this.postRepository.findOneBy({ id });
   }
 
+  /**
+   * Find all Post
+   * @returns Post object
+   */
   public async findAll() {
     return this.postRepository.find();
   }
@@ -48,6 +52,11 @@ export class PostsService {
     return this.postRepository.save(post);
   }
 
+  /**
+   * Update existing Post
+   * @param patchPostDto
+   * @returns post object
+   */
   public patchPost(patchPostDto: PatchPostDto) {
     console.log(patchPostDto);
     return 'Called patch post endpoint';
