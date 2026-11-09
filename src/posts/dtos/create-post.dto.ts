@@ -110,12 +110,20 @@ export class CreatePostDto {
   tags?: string[];
 
   @ApiPropertyOptional({
-    description: 'Additional custom key-value meta options for the post',
-    type: () => [CreatePostMetaOptionsDto],
+    required: false,
+    items: {
+      type: 'object',
+      properties: {
+        metaValue: {
+          type: 'json',
+          description: 'The metaValue is JSON string',
+          example: '{"sidebarEnable": true}',
+        },
+      },
+    },
   })
   @IsOptional()
-  @IsArray()
-  @ValidateNested({ each: true })
+  @ValidateNested()
   @Type(() => CreatePostMetaOptionsDto)
-  metaOptions?: CreatePostMetaOptionsDto[];
+  metaOptions?: CreatePostMetaOptionsDto;
 }

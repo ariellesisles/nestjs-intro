@@ -4,16 +4,28 @@ import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreatePostDto } from './dtos/create-post.dto';
 import { PatchPostDto } from './dtos/patch-post.dto';
 
+/**
+ * Post Controller
+ */
 @Controller('posts')
 @ApiTags('Posts')
 export class PostsController {
+  /**
+   * Inject PostsServiceS
+   * @param postsService
+   */
   constructor(private readonly postsService: PostsService) {}
 
-  @Get(':userId')
-  @ApiOperation({ summary: 'Get posts by user' })
+  /**
+   * Find post by ID
+   * @param id
+   * @returns post object
+   */
+  @Get(':id')
+  @ApiOperation({ summary: 'Get posts by ID' })
   @ApiParam({
-    name: 'userId',
-    description: 'The unique identifier of the user',
+    name: 'id',
+    description: 'The unique identifier of the post',
     type: 'string',
     example: '12345',
   })
@@ -23,12 +35,17 @@ export class PostsController {
   })
   @ApiResponse({
     status: 404,
-    description: 'User not found',
+    description: 'Post not found',
   })
-  public getPostsById(@Param('userId') userId: string) {
-    return this.postsService.findAll(userId);
+  public getPostsById(@Param('id') id: number) {
+    return this.postsService.findPostById(id);
   }
 
+  /**
+   * Create Post
+   * @param createPostDto
+   * @returns Post
+   */
   @Post()
   @ApiOperation({
     summary: 'Create blog post',
@@ -42,9 +59,14 @@ export class PostsController {
     description: 'Bad Request / Validation failed',
   })
   public createPost(@Body() createPostDto: CreatePostDto) {
-    return this.postsService.createPost(createPostDto);
+    return this.postsService.create(createPostDto);
   }
 
+  /**
+   * Patch Post
+   * @param patchPostDto
+   * @returns post
+   */
   @Patch()
   @ApiOperation({
     summary: 'Patch blog post',
