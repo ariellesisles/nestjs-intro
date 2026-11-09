@@ -74,6 +74,7 @@ export class Post {
 
   @OneToOne(() => MetaOption, {
     cascade: true, // cascade :['insert', 'soft-remove']
+    eager: true,
   })
   @JoinColumn()
   metaOptions?: MetaOption;

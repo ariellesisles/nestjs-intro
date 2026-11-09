@@ -42,6 +42,22 @@ export class PostsController {
   }
 
   /**
+   * Fetch all posts in the Database
+   * @returns Posts
+   */
+  @ApiOperation({
+    summary: 'Fetch all posts',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Successfully fetch posts',
+  })
+  @Get()
+  public getPosts() {
+    return this.postsService.findAll();
+  }
+
+  /**
    * Create Post
    * @param createPostDto
    * @returns Post
