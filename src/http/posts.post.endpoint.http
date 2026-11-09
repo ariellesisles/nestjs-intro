@@ -5,12 +5,16 @@ Content-Type: application/json
 {
   "title":" Title 2",
   "postType": "post" ,
-  "slug": "my-slug-111",
+  "slug": "new-nest-slug-2",
   "status": "draft",
   "content": "test content",
-   "schema": "{\r\n    \"name\": \"Adeel Solangi\",\r\n    \"language\": \"Sindhi\"\r\n}",
+   "schema": "{\r\n    \"name\": \"John Doe\",\r\n    \"language\": \"English\"\r\n}",
   "featuredImageUrl": "https://unsplash.com/photos/woman-at-the-controls-of-a-skid-steer-XHnS6_Q2_jo",
-  "publishedOn": "2026-11-04T23:08:01-08:00",
-  "tags": ["nestjs", "REST API"]
+  "publishedOn": "2026-11-09T23:08:01-08:00",
+  "tags": ["NestJS", "TypeORM"]
+  // , 
+  // "metaOptions": {
+  //   "metaValue": "{\"sidebarEnabled\": true}"
+  // }
 
 }

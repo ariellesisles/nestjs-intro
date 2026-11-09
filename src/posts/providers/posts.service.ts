@@ -41,22 +41,8 @@ export class PostsService {
    * @returns Post
    */
   public async create(@Body() createPostDto: CreatePostDto): Promise<Post> {
-    //Create metaOptions (optional)
-    const metaOptions = createPostDto.metaOptions
-      ? this.metaOptionRepository.create(createPostDto.metaOptions)
-      : null;
-
-    if (metaOptions) {
-      await this.metaOptionRepository.save(metaOptions);
-    }
-
     //Create Post
     const post = this.postRepository.create(createPostDto);
-
-    //Add metaoption to the post
-    if (metaOptions) {
-      post.metaOptions = metaOptions;
-    }
 
     //Save and return post
     return this.postRepository.save(post);
