@@ -3,18 +3,16 @@ Content-Type: application/json
 
 
 {
-  "title":" Title 2",
+  "title":"ACID Transaction",
   "postType": "post" ,
-  "slug": "new-nest-slug-2",
+  "slug": "slug-test",
   "status": "draft",
   "content": "test content",
-   "schema": "{\r\n    \"name\": \"John Doe\",\r\n    \"language\": \"English\"\r\n}",
+   "schema": "{\r\n    \"name\": \"Test Name\",\r\n    \"language\": \"English\"\r\n}",
   "featuredImageUrl": "https://unsplash.com/photos/woman-at-the-controls-of-a-skid-steer-XHnS6_Q2_jo",
   "publishedOn": "2026-11-09T23:08:01-08:00",
-  "tags": ["NestJS", "TypeORM"]
-  // , 
-  // "metaOptions": {
-  //   "metaValue": "{\"sidebarEnabled\": true}"
-  // }
-
+  "tags": ["Postgres"], 
+  "metaOptions": {
+    "metaValue": "{\"forBeginner\": true}"
+  }
 }

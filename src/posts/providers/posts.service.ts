@@ -53,29 +53,15 @@ export class PostsService {
     return 'Called patch post endpoint';
   }
   /**
-   *
+   * Delete post
    * @param id
-   * @returns
+   * @return object
    */
   public async delete(id: number) {
-    // 1. Find the post along with its relation so we can get the metaOptions ID
-    const post = await this.postRepository.findOne({
-      where: { id },
-      relations: {
-        metaOptions: true,
-      },
-    });
+    const post = await this.postRepository.delete(id);
 
     if (!post) {
       throw new NotFoundException(`Post with ID ${id} not found`);
-    }
-
-    // 2. Delete the post first (or delete metaOptions first depending on FK constraints)
-    await this.postRepository.delete(id);
-
-    // 3. Safely delete associated metaOptions if they exist
-    if (post.metaOptions?.id) {
-      await this.metaOptionRepository.delete(post.metaOptions.id);
     }
 
     return { deleted: true, id };
