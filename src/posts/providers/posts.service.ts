@@ -1,4 +1,4 @@
-import { Body, Injectable } from '@nestjs/common';
+import { Body, Injectable, NotFoundException } from '@nestjs/common';
 import { CreatePostDto } from '../dtos/create-post.dto';
 import { PatchPostDto } from '../dtos/patch-post.dto';
 import { MetaOption } from '../../meta-options/meta-option.entity';
@@ -51,5 +51,33 @@ export class PostsService {
   public patchPost(patchPostDto: PatchPostDto) {
     console.log(patchPostDto);
     return 'Called patch post endpoint';
+  }
+  /**
+   *
+   * @param id
+   * @returns
+   */
+  public async delete(id: number) {
+    // 1. Find the post along with its relation so we can get the metaOptions ID
+    const post = await this.postRepository.findOne({
+      where: { id },
+      relations: {
+        metaOptions: true,
+      },
+    });
+
+    if (!post) {
+      throw new NotFoundException(`Post with ID ${id} not found`);
+    }
+
+    // 2. Delete the post first (or delete metaOptions first depending on FK constraints)
+    await this.postRepository.delete(id);
+
+    // 3. Safely delete associated metaOptions if they exist
+    if (post.metaOptions?.id) {
+      await this.metaOptionRepository.delete(post.metaOptions.id);
+    }
+
+    return { deleted: true, id };
   }
 }
