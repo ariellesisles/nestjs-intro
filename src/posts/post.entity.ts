@@ -12,7 +12,6 @@ import { PostType } from './enums/post-type.enum';
 import { MetaOption } from '../meta-options/meta-option.entity';
 import { User } from '../users/user.entity';
 import { Tag } from '../tags/tag.entity';
-import { IsArray } from 'class-validator';
 
 @Entity()
 export class Post {
@@ -75,19 +74,20 @@ export class Post {
   })
   publishedOn?: Date;
 
-  @IsArray()
-  @ManyToMany(() => Tag)
+  @ManyToMany(() => Tag, {
+    // eager: true, // can also call the eager in many-to-many 
+  })
   @JoinTable()
   tags?: Tag[];
 
   @ManyToOne(() => User, (user) => user.posts, {
-    eager: true,
+    // eager: true,
   })
   author: User;
 
   @OneToOne(() => MetaOption, (metaOptions) => metaOptions.post, {
     cascade: true, // cascade :['insert', 'soft-remove']
-    eager: true,
+    // eager: true,
   })
   metaOptions?: MetaOption;
 }

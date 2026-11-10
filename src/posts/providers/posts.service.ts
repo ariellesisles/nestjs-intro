@@ -43,7 +43,9 @@ export class PostsService {
   public async findAll() {
     return this.postRepository.find({
       relations: {
+        author: true,
         metaOptions: true,
+        tags: true,
       },
     });
   }
