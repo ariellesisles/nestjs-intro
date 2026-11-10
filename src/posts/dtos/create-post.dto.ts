@@ -100,15 +100,13 @@ export class CreatePostDto {
   publishedOn?: Date;
 
   @ApiPropertyOptional({
-    description: 'List of tags associated with the post',
-    type: [String],
-    example: ['nestjs', 'REST API'],
+    description: 'Array of ids of Tags',
+    example: [11, 5],
   })
   @IsOptional()
   @IsArray()
-  @IsString({ each: true })
-  @MinLength(3, { each: true })
-  tags?: string[];
+  @IsInt({ each: true })
+  tags?: number[];
 
   @ApiPropertyOptional({
     required: false,

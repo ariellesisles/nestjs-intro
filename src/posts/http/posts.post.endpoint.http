@@ -3,17 +3,18 @@ Content-Type: application/json
 
 
 {
-  "title":"Sample Title",
+  "title":"backend",
   "postType": "post" ,
-  "slug": "slug-title-2",
+  "slug": "backend",
   "status": "draft",
-  "content": "test content",
+  "content": "backend details",
    "schema": "{\r\n    \"name\": \"Test Name\",\r\n    \"language\": \"English\"\r\n}",
   "featuredImageUrl": "https://unsplash.com/photos/woman-at-the-controls-of-a-skid-steer-XHnS6_Q2_jo",
   "publishedOn": "2026-11-09T23:08:01-08:00",
-  "tags": ["Postgres"], 
+  "tags": ["nestjs"], 
   "metaOptions": {
     "metaValue": "{\"forBeginner\": true}"
   },
-  "authorId": 1
+  "authorId": 1,
+  "tags": [1,2]
 }

@@ -6,6 +6,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Post } from '../post.entity';
 import { UsersService } from '../../users/providers/users.service';
+import { TagsService } from '../../tags/providers/tags.service';
 
 /**
  * Post  Service
@@ -23,6 +24,7 @@ export class PostsService {
     @InjectRepository(Post)
     private readonly postRepository: Repository<Post>,
     private readonly usersService: UsersService,
+    private readonly tagService: TagsService,
   ) {}
 
   /**
@@ -51,19 +53,23 @@ export class PostsService {
    * @returns Post
    */
   public async create(@Body() createPostDto: CreatePostDto): Promise<Post> {
+    // Destructure DTO
+    const { authorId, tags, ...postDto } = createPostDto;
+
     //Find authorId exists in users table
-    let author = await this.usersService.findOneById(createPostDto.authorId);
+    let author = await this.usersService.findOneById(authorId);
 
     if (!author) {
-      throw new NotFoundException(
-        `User with ID ${createPostDto.authorId} not found`,
-      );
+      throw new NotFoundException(`User with ID ${authorId} not found`);
     }
+    // Find Tags
+    const tagIds = tags ? await this.tagService.findMultipleTags(tags) : [];
 
     //Create Post
     const post = this.postRepository.create({
-      ...createPostDto,
+      ...postDto,
       author,
+      tags: tagIds,
     });
 
     //Save and return post

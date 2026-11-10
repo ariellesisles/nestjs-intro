@@ -1,5 +1,5 @@
 import { Body, Injectable } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Tag } from '../tag.entity';
 import { CreateTagDto } from '../dtos/create-tag.dto';
@@ -9,12 +9,11 @@ import { CreateTagDto } from '../dtos/create-tag.dto';
  */
 @Injectable()
 export class TagsService {
-  
   /**
    * Inject Tag Repository
-   * @param tagRepository 
+   * @param tagRepository
    */
-    constructor(
+  constructor(
     @InjectRepository(Tag)
     private readonly tagRepository: Repository<Tag>,
   ) {}
@@ -27,5 +26,19 @@ export class TagsService {
   public async create(@Body() createTagDto: CreateTagDto): Promise<Tag> {
     const tag = this.tagRepository.create(createTagDto);
     return this.tagRepository.save(tag);
+  }
+
+  public async findMultipleTags(tagsIds: number[]): Promise<Tag[]> {
+    if (!tagsIds || tagsIds.length === 0) {
+      return [];
+    }
+
+    const result = await this.tagRepository.find({
+      where: {
+        id: In(tagsIds),
+      },
+    });
+
+    return result;
   }
 }

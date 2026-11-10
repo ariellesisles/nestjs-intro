@@ -11,6 +11,11 @@ import { CreateUserDto } from '../dto/create-user.dto';
  */
 @Injectable()
 export class UsersService {
+  /**
+   * Inject AuthService and UserRepository
+   * @param authService 
+   * @param userRepository 
+   */
   constructor(
     @Inject(forwardRef(() => AuthService))
     private readonly authService: AuthService,
