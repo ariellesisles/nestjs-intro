@@ -1,21 +1,20 @@
-PATCH http://localhost:3000/posts
+PATCH http://localhost:3000/posts/14
 Content-Type: application/json
 
 
 {
-  "id": 1,
-  "title":" Title",
+  "title":"backend-updated title",
   "postType": "post" ,
-  "slug": "my-slug-2134",
+  "slug": "backend",
   "status": "draft",
-  "content": "test content",
-   "schema": "{\r\n    \"name\": \"Adeel Solangi\",\r\n    \"language\": \"Sindhi\"\r\n}",
+  "content": "backend details",
+   "schema": "{\r\n    \"name\": \"Test Name\",\r\n    \"language\": \"English\"\r\n}",
   "featuredImageUrl": "https://unsplash.com/photos/woman-at-the-controls-of-a-skid-steer-XHnS6_Q2_jo",
-  "publishedOn": "2026-11-04T23:08:01-08:00",
-  "tags": ["nestjs", "REST API"],
-  "metaOptions": [{
-    "key": "testKey",
-    "value":10
-  }]
-
+  "publishedOn": "2026-11-09T23:08:01-08:00",
+  "tags": ["nestjs"], 
+  "metaOptions": {
+    "metaValue": "{\"forBeginner\": false}"
+  },
+  "authorId": 1,
+  "tags": [1,3]
 }

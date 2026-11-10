@@ -3,7 +3,7 @@ import { CreatePostDto } from '../dtos/create-post.dto';
 import { PatchPostDto } from '../dtos/patch-post.dto';
 import { MetaOption } from '../../meta-options/meta-option.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { Post } from '../post.entity';
 import { UsersService } from '../../users/providers/users.service';
 import { TagsService } from '../../tags/providers/tags.service';
@@ -14,9 +14,12 @@ import { TagsService } from '../../tags/providers/tags.service';
 @Injectable()
 export class PostsService {
   /**
-   * Inject MetaOption and Post Repository
+   * Inject {metaOptionRepository, postRepository, usersService, tagService, postsService}
    * @param metaOptionRepository
    * @param postRepository
+   * @param usersService
+   * @param tagService
+   * @param postsService
    */
   constructor(
     @InjectRepository(MetaOption)
@@ -25,6 +28,7 @@ export class PostsService {
     private readonly postRepository: Repository<Post>,
     private readonly usersService: UsersService,
     private readonly tagService: TagsService,
+    private readonly datasource: DataSource,
   ) {}
 
   /**
@@ -83,10 +87,44 @@ export class PostsService {
    * @param patchPostDto
    * @returns post object
    */
-  public patchPost(patchPostDto: PatchPostDto) {
-    console.log(patchPostDto);
-    return 'Called patch post endpoint';
+  public async update(id: number, patchPostDto: PatchPostDto) {
+    // Deconstruct DTO
+    const { tags, metaOptions, ...restDto } = patchPostDto;
+
+    return await this.datasource.transaction(async (manager) => {
+      const post = await manager.findOne(Post, {
+        where: { id },
+        relations: {
+          author: true,
+          tags: true,
+          metaOptions: true, // <-- load existing meta option
+        },
+      });
+
+      if (!post) {
+        throw new NotFoundException(`Post with ID #${id} not found`);
+      }
+
+      if (tags !== undefined) {
+        post.tags = await this.tagService.findMultipleTags(tags);
+      }
+
+      if (metaOptions !== undefined) {
+        if (post.metaOptions) {
+          manager.merge(MetaOption, post.metaOptions, metaOptions); // UPDATE
+        } else {
+          post.metaOptions = manager.create(MetaOption, metaOptions); // INSERT
+        }
+      }
+
+      // Update regular post scalar properties
+      manager.merge(Post, post, restDto);
+
+      // Save 
+      return await manager.save(post);
+    });
   }
+
   /**
    * Delete post
    * @param id

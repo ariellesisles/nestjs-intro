@@ -2,9 +2,9 @@ POST http://localhost:3000/tags
 Content-Type: application/json
 
 {
-  "name": "backend",
-  "slug": "backend",
-  "description": "Backend",
+  "name": "postgres",
+  "slug": "postgres",
+  "description": "postgres",
   "schema": null,
   "featuredImageUrl": null
 }

@@ -5,9 +5,9 @@ Content-Type: application/json
 {
   "title":"backend",
   "postType": "post" ,
-  "slug": "backend",
+  "slug": "slug-title-2",
   "status": "draft",
-  "content": "backend details",
+  "content": "test content",
    "schema": "{\r\n    \"name\": \"Test Name\",\r\n    \"language\": \"English\"\r\n}",
   "featuredImageUrl": "https://unsplash.com/photos/woman-at-the-controls-of-a-skid-steer-XHnS6_Q2_jo",
   "publishedOn": "2026-11-09T23:08:01-08:00",

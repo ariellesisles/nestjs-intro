@@ -93,7 +93,7 @@ export class PostsController {
    * @param patchPostDto
    * @returns post
    */
-  @Patch()
+  @Patch(':id')
   @ApiOperation({
     summary: 'Patch blog post',
   })
@@ -105,8 +105,11 @@ export class PostsController {
     status: 400,
     description: 'Bad Request / Validation failed',
   })
-  public patchPost(@Body() patchPostDto: PatchPostDto) {
-    return this.postsService.patchPost(patchPostDto);
+  public patchPost(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() patchPostDto: PatchPostDto,
+  ) {
+    return this.postsService.update(id, patchPostDto);
   }
 
   /**
