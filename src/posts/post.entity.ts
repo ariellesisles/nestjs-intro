@@ -73,7 +73,9 @@ export class Post {
 
   tags?: string[];
 
-  @ManyToOne(() => User, (user) => user.posts)
+  @ManyToOne(() => User, (user) => user.posts, {
+    eager: true
+  })
   author: User;
 
   @OneToOne(() => MetaOption, (metaOptions) => metaOptions.post, {

@@ -39,7 +39,11 @@ export class PostsService {
    * @returns Post object
    */
   public async findAll() {
-    return this.postRepository.find();
+    return this.postRepository.find({
+      relations: {
+        metaOptions: true,
+      },
+    });
   }
   /**
    * Create post
