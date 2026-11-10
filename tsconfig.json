@@ -16,10 +16,16 @@
     "outDir": "./dist",
     "rootDir": ".",
     "incremental": true,
+    "tsBuildInfoFile": "./node_modules/.cache/tsconfig.tsbuildinfo",
     "skipLibCheck": true,
     "strict": true,
     "strictPropertyInitialization": false
   },
+    "include": [
+    "src/**/*.ts",
+    "test/**/*.ts",
+    "jest.config.ts"
+  ],
   "exclude": [
     "node_modules",
     "dist",

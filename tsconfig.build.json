@@ -2,9 +2,16 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "rootDir": "./src",
-    "incremental": false,
-    "outDir": "./dist"
+    "types": ["node"],
+    "tsBuildInfoFile": "./node_modules/.cache/tsconfig.build.tsbuildinfo"
   },
-  "include": ["src"],
-  "exclude": ["node_modules", "test", "dist", "**/*spec.ts"]
+  "include": ["src/**/*.ts"],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "test",
+    "documentation",
+    "**/*.spec.ts",
+    "**/*.e2e-spec.ts"
+  ]
 }
