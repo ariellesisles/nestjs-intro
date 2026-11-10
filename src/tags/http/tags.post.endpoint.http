@@ -1,0 +1,10 @@
+POST http://localhost:3000/tags
+Content-Type: application/json
+
+{
+  "name": "Tag Name",
+  "slug": "my-tag-name"
+//   "description": "Sample Description",
+//   "schema": "string",
+//   "featuredImageUrl": "string"
+}

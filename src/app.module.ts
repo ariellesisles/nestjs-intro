@@ -10,6 +10,7 @@ import { Post } from './posts/post.entity';
 import { TagsModule } from './tags/tags.module';
 import { MetaOptionsModule } from './meta-options/meta-options.module';
 import { MetaOption } from './meta-options/meta-option.entity';
+import { Tag } from './tags/tag.entity';
 
 @Module({
   imports: [
@@ -24,7 +25,7 @@ import { MetaOption } from './meta-options/meta-option.entity';
         username: 'postgres',
         password: 'postgres',
         database: 'blog_db',
-        entities: [User, Post, MetaOption],
+        entities: [User, Post, MetaOption, Tag],
         synchronize: true, //should only be used on DEV environment 
       }),
     }),

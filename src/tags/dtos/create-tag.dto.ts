@@ -18,7 +18,7 @@ export class CreateTagDto {
   @MaxLength(255)
   name: string;
 
-    @ApiProperty()
+  @ApiProperty()
   @IsString()
   @IsNotEmpty()
   @Matches(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, {
