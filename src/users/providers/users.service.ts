@@ -1,9 +1,10 @@
-import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import { Body, forwardRef, Inject, Injectable } from '@nestjs/common';
 import { GetUsersQueryDto } from '../dto/get-users-query.dto';
 import { AuthService } from '../../auth/providers/auth.service';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../user.entity';
 import { Repository } from 'typeorm';
+import { CreateUserDto } from '../dto/create-user.dto';
 
 /**
  * Users Service
@@ -31,6 +32,16 @@ export class UsersService {
    * @param authService authentication service for verifying login status
    */
 
+  /**
+   * Create user service 
+   * @param createUserDto 
+   * @returns User
+   */
+  public async create(@Body() createUserDto: CreateUserDto): Promise<User> {
+    const user = this.userRepository.create(createUserDto);
+    return await this.userRepository.save(user);
+  }
+ 
   /**
    *  Fetch all users if authenticated
    * @param getUsersQueryDto query parameter

@@ -3,9 +3,9 @@ Content-Type: application/json
 
 
 {
-  "title":"ACID Transaction",
+  "title":"Sample Title",
   "postType": "post" ,
-  "slug": "slug-test",
+  "slug": "slug-title-2",
   "status": "draft",
   "content": "test content",
    "schema": "{\r\n    \"name\": \"Test Name\",\r\n    \"language\": \"English\"\r\n}",
@@ -14,5 +14,6 @@ Content-Type: application/json
   "tags": ["Postgres"], 
   "metaOptions": {
     "metaValue": "{\"forBeginner\": true}"
-  }
+  },
+  "authorId": 1
 }

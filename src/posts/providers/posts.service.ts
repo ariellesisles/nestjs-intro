@@ -5,6 +5,7 @@ import { MetaOption } from '../../meta-options/meta-option.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Post } from '../post.entity';
+import { UsersService } from '../../users/providers/users.service';
 
 /**
  * Post  Service
@@ -21,6 +22,7 @@ export class PostsService {
     private readonly metaOptionRepository: Repository<MetaOption>,
     @InjectRepository(Post)
     private readonly postRepository: Repository<Post>,
+    private readonly usersService: UsersService,
   ) {}
 
   /**
@@ -46,9 +48,19 @@ export class PostsService {
    */
   public async create(@Body() createPostDto: CreatePostDto): Promise<Post> {
     //Find authorId exists in users table
+    let author = await this.usersService.findOneById(createPostDto.authorId);
+
+    if (!author) {
+      throw new NotFoundException(
+        `User with ID ${createPostDto.authorId} not found`,
+      );
+    }
 
     //Create Post
-    const post = this.postRepository.create(createPostDto);
+    const post = this.postRepository.create({
+      ...createPostDto,
+      author,
+    });
 
     //Save and return post
     return this.postRepository.save(post);

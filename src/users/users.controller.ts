@@ -14,7 +14,6 @@ import { PatchUserDto } from './dto/patch-user.dto';
 import { UsersService } from './providers/users.service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
-
 /**
  * Users Controller
  */
@@ -81,10 +80,8 @@ export class UsersController {
   })
   @ApiResponse({ status: 400, description: 'Bad Request / Validation failed' })
   public createUser(@Body() createUserDto: CreateUserDto) {
-    console.log(createUserDto instanceof CreateUserDto);
-    return 'Called create user endpoint';
+    return this.usersService.create(createUserDto);
   }
-
 
   /**
    * Partially updates an existing user record with the provided payload fields.
