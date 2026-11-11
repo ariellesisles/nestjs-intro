@@ -11,12 +11,16 @@ import { TagsModule } from './tags/tags.module';
 import { MetaOptionsModule } from './meta-options/meta-options.module';
 import { MetaOption } from './meta-options/meta-option.entity';
 import { Tag } from './tags/tag.entity';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    AuthModule,
     UsersModule,
     PostsModule,
-    AuthModule,
+    ConfigModule.forRoot({
+      isGlobal: true, // ConfigModule will be able to all modules
+    }),
     TypeOrmModule.forRootAsync({
       useFactory: () => ({
         type: 'postgres',
@@ -26,7 +30,7 @@ import { Tag } from './tags/tag.entity';
         password: 'postgres',
         database: 'blog_db',
         entities: [User, Post, MetaOption, Tag],
-        synchronize: true, //should only be used on DEV environment 
+        synchronize: true, //should only be used on DEV environment
       }),
     }),
     TagsModule,
