@@ -82,4 +82,30 @@ export class TagsController {
   public delete(@Param('id', ParseIntPipe) id: number) {
     return this.tagsService.delete(id);
   }
+
+  /**
+   * Deletes a tag by its ID.
+   *
+   * @param id - ID of the tag to delete.
+   * @returns An object confirming deletion, containing `deleted: true` and the tag ID.
+   */
+  @ApiOperation({ summary: 'Soft Delete a Tag' })
+  @ApiResponse({
+    status: 200,
+    description: 'Deletion confirmation.',
+    schema: {
+      example: {
+        deleted: true,
+        id: 12,
+      },
+    },
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Tag not found.',
+  })
+  @Delete('/soft-delete/:id')
+  public softDelete(@Param('id', ParseIntPipe) id: number) {
+    return this.tagsService.softRemove(id);
+  }
 }

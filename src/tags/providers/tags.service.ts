@@ -4,6 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Tag } from '../tag.entity';
 import { CreateTagDto } from '../dtos/create-tag.dto';
 import { deleteEntity } from '../../common/utils/delete-entity.util';
+import { DeleteType } from '../../posts/enums/delete-type.enum';
 
 /**
  * Tag Service
@@ -37,13 +38,15 @@ export class TagsService {
   }
 
   public async findMultipleTags(tagsIds: number[]): Promise<Tag[]> {
+    const uniqueTagIds = [...new Set(tagsIds)];
+
     if (!tagsIds || tagsIds.length === 0) {
       return [];
     }
 
     const result = await this.tagRepository.find({
       where: {
-        id: In(tagsIds),
+        id: In(uniqueTagIds),
       },
     });
 
@@ -57,5 +60,14 @@ export class TagsService {
    */
   public async delete(id: number): Promise<{ deleted: true; id: number }> {
     return deleteEntity(this.tagRepository, id, 'Tag');
+  }
+
+  /**
+   * Soft delete Tag by ID
+   * @param id  Entity ID to be deleted
+   * @returns An object confirming deletion with `deleted:true` and its ID
+   */
+  public async softRemove(id: number): Promise<{ deleted: true; id: number }> {
+    return deleteEntity(this.tagRepository, id, 'Tag', DeleteType.SOFT);
   }
 }
