@@ -107,7 +107,13 @@ export class PostsService {
       }
 
       if (tags !== undefined) {
-        post.tags = await this.tagService.findMultipleTags(tags);
+        const existingTags = await this.tagService.findMultipleTags(tags);
+
+        if (existingTags.length !== new Set(tags).size) {
+          throw new NotFoundException('One or more tags were not found');
+        }
+
+        post.tags = existingTags;
       }
 
       if (metaOptions !== undefined) {
