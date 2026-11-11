@@ -7,6 +7,7 @@ import { DataSource, Repository } from 'typeorm';
 import { Post } from '../post.entity';
 import { UsersService } from '../../users/providers/users.service';
 import { TagsService } from '../../tags/providers/tags.service';
+import { deleteEntity } from '../../common/utils/delete-entity.util';
 
 /**
  * Post  Service
@@ -120,23 +121,17 @@ export class PostsService {
       // Update regular post scalar properties
       manager.merge(Post, post, restDto);
 
-      // Save 
+      // Save
       return await manager.save(post);
     });
   }
 
   /**
-   * Delete post
+   *
    * @param id
-   * @return object
+   * @returns
    */
-  public async delete(id: number) {
-    const post = await this.postRepository.delete(id);
-
-    if (!post) {
-      throw new NotFoundException(`Post with ID ${id} not found`);
-    }
-
-    return { deleted: true, id };
+  public async delete(id: number): Promise<{ deleted: true; id: number }> {
+    return deleteEntity(this.postRepository, id, 'Post');
   }
 }

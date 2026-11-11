@@ -3,6 +3,7 @@ import { In, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Tag } from '../tag.entity';
 import { CreateTagDto } from '../dtos/create-tag.dto';
+import { deleteEntity } from '../../common/utils/delete-entity.util';
 
 /**
  * Tag Service
@@ -18,6 +19,13 @@ export class TagsService {
     private readonly tagRepository: Repository<Tag>,
   ) {}
 
+  /**
+   * Retrieve all tags
+   * @returns A list of tags
+   */
+  public async findAll(): Promise<Tag[]> {
+    return this.tagRepository.find();
+  }
   /**
    *  Create Tag Service
    * @param createTagDto
@@ -40,5 +48,14 @@ export class TagsService {
     });
 
     return result;
+  }
+
+  /**
+   * Delete Tag by ID
+   * @param id Entity ID of tag to delete
+   * @returns An object confirming deletion with `deleted:true` and its ID
+   */
+  public async delete(id: number): Promise<{ deleted: true; id: number }> {
+    return deleteEntity(this.tagRepository, id, 'Tag');
   }
 }

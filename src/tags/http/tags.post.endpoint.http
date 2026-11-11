@@ -2,9 +2,9 @@ POST http://localhost:3000/tags
 Content-Type: application/json
 
 {
-  "name": "postgres",
-  "slug": "postgres",
-  "description": "postgres",
+  "name": "nest",
+  "slug": "javascript",
+  "description": "javascript",
   "schema": null,
   "featuredImageUrl": null
 }

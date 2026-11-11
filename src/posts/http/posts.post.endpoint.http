@@ -3,18 +3,17 @@ Content-Type: application/json
 
 
 {
-  "title":"backend",
+  "title":"nestjs",
   "postType": "post" ,
-  "slug": "slug-title-2",
+  "slug": "nest-js-2",
   "status": "draft",
   "content": "test content",
    "schema": "{\r\n    \"name\": \"Test Name\",\r\n    \"language\": \"English\"\r\n}",
   "featuredImageUrl": "https://unsplash.com/photos/woman-at-the-controls-of-a-skid-steer-XHnS6_Q2_jo",
   "publishedOn": "2026-11-09T23:08:01-08:00",
-  "tags": ["nestjs"], 
   "metaOptions": {
     "metaValue": "{\"forBeginner\": true}"
   },
   "authorId": 1,
-  "tags": [1,2]
+  "tags": [1,2, 3]
 }
