@@ -6,6 +6,8 @@ import { User } from '../user.entity';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from '../dto/create-user.dto';
 import { ConfigService } from '@nestjs/config';
+import type { ConfigType } from '@nestjs/config';
+import profileConfig from '../config/profile.config';
 
 /**
  * Users Service
@@ -23,6 +25,8 @@ export class UsersService {
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     private readonly configService: ConfigService,
+    @Inject(profileConfig.KEY)
+    private readonly profileConfiguration: ConfigType<typeof profileConfig>,
   ) {}
 
   /**
@@ -56,6 +60,7 @@ export class UsersService {
    */
   public findAll(getUsersQueryDto: GetUsersQueryDto) {
     console.log('APP_VERSION:', this.configService.get<string>('APP_VERSION'));
+    console.log('profileConfig:', this.profileConfiguration);
     const isAuthenticated = this.authService.isAuthenticated();
     console.log('isAuthenticated', isAuthenticated);
     if (isAuthenticated) {
