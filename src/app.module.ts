@@ -13,6 +13,7 @@ import { MetaOption } from './meta-options/meta-option.entity';
 import { Tag } from './tags/tag.entity';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { databaseConfig } from './config/database.config';
+import appConfig from './config/app.config';
 
 const ENV = process.env.NODE_ENV;
 
@@ -24,7 +25,7 @@ const ENV = process.env.NODE_ENV;
     ConfigModule.forRoot({
       isGlobal: true, // ConfigModule will be able to all modules
       envFilePath: !ENV ? '.env' : `.env.${ENV}`,
-      load: [databaseConfig],
+      load: [appConfig, databaseConfig],
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],

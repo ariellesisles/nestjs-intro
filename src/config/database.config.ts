@@ -1,5 +1,5 @@
 export const databaseConfig = () => ({
-  environment: process.env.NODE_ENV || 'production',
+
   database: {
     type: 'postgres',
     name: process.env.DB_NAME || ' blog_db',
