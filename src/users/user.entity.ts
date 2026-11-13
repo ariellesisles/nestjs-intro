@@ -1,7 +1,15 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  Unique,
+} from 'typeorm';
 import { Post } from '../posts/post.entity';
+import { Exclude } from 'class-transformer';
 
-@Entity()
+@Entity('users')
+@Unique('UQ_users_email', ['email'])
 export class User {
   @PrimaryGeneratedColumn()
   id: number;
@@ -24,17 +32,19 @@ export class User {
     type: 'varchar',
     length: 50,
     nullable: false,
-    unique: true,
   })
   email: string;
 
+  @Exclude()
   @Column({
     type: 'varchar',
-    length: 50,
+    length: 255,
     nullable: false,
+    select: false,
   })
+  @Column({ type: 'varchar', length: 255, nullable: false, select: false })
   password: string;
 
   @OneToMany(() => Post, (post) => post.author)
-  posts: Post;
+  posts: Post[];
 }

@@ -1,11 +1,13 @@
 import {
   Body,
+  ClassSerializerInterceptor,
   Controller,
   Get,
   Param,
   Patch,
   Post,
   Query,
+  UseInterceptors,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { GetUserParamsDto } from './dto/get-user-params.dto';
@@ -13,10 +15,12 @@ import { GetUsersQueryDto } from './dto/get-users-query.dto';
 import { PatchUserDto } from './dto/patch-user.dto';
 import { UsersService } from './providers/users.service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { User } from './user.entity';
 
 /**
  * Users Controller
  */
+@UseInterceptors(ClassSerializerInterceptor)
 @ApiTags('Users')
 @Controller('users')
 export class UsersController {
@@ -76,10 +80,12 @@ export class UsersController {
   @ApiResponse({
     status: 201,
     description: 'User successfully created',
-    type: CreateUserDto,
+    type: User,
   })
   @ApiResponse({ status: 400, description: 'Bad Request / Validation failed' })
-  public createUser(@Body() createUserDto: CreateUserDto) {
+  @ApiResponse({ status: 409, description: 'Email already in use' })
+  @ApiResponse({ status: 500, description: 'Unexpected error' })
+  public createUser(@Body() createUserDto: CreateUserDto): Promise<User> {
     return this.usersService.create(createUserDto);
   }
 

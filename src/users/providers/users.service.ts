@@ -1,4 +1,10 @@
-import { Body, forwardRef, Inject, Injectable } from '@nestjs/common';
+import {
+  forwardRef,
+  HttpException,
+  Inject,
+  Injectable,
+  Logger,
+} from '@nestjs/common';
 import { GetUsersQueryDto } from '../dto/get-users-query.dto';
 import { AuthService } from '../../auth/providers/auth.service';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -8,12 +14,15 @@ import { CreateUserDto } from '../dto/create-user.dto';
 import { ConfigService } from '@nestjs/config';
 import type { ConfigType } from '@nestjs/config';
 import profileConfig from '../config/profile.config';
-
+import { Exceptions } from '../../common/exceptions/http-exceptions';
+import { isUniqueViolation } from '../../common/exceptions/database-errors';
+import { PasswordService } from '../../common/security/password.service';
 /**
  * Users Service
  */
 @Injectable()
 export class UsersService {
+  private readonly logger = new Logger(UsersService.name);
   /**
    * Inject AuthService and UserRepository
    * @param authService
@@ -27,6 +36,7 @@ export class UsersService {
     private readonly configService: ConfigService,
     @Inject(profileConfig.KEY)
     private readonly profileConfiguration: ConfigType<typeof profileConfig>,
+    private readonly passwordService: PasswordService,
   ) {}
 
   /**
@@ -48,9 +58,39 @@ export class UsersService {
    * @param createUserDto
    * @returns User
    */
-  public async create(@Body() createUserDto: CreateUserDto): Promise<User> {
-    const user = this.userRepository.create(createUserDto);
-    return await this.userRepository.save(user);
+  public async create(dto: CreateUserDto): Promise<User> {
+    const email = dto.email.trim().toLowerCase();
+
+    // 1. UX pre-check — NOT for correctness (DB constraint is the guard)
+    const existing = await this.userRepository.findOne({
+      where: { email },
+      select: { id: true },
+    });
+    if (existing) {
+      throw Exceptions.uniqueConflict('email');
+    }
+
+    // 2. Insert — named DB constraint is the source of truth
+    try {
+      const user = this.userRepository.create({
+        ...dto,
+        email,
+        password: await this.passwordService.hash(dto.password),
+      });
+      return await this.userRepository.save(user);
+    } catch (err: unknown) {
+      if (err instanceof HttpException) throw err;
+
+      if (isUniqueViolation(err, 'UQ_users_email')) {
+        throw Exceptions.uniqueConflict('email');
+      }
+
+      this.logger.error(
+        'Unexpected error creating user',
+        err instanceof Error ? err.stack : String(err),
+      );
+      throw Exceptions.unexpected();
+    }
   }
 
   /**
