@@ -40,15 +40,6 @@ export class UsersService {
   ) {}
 
   /**
-   * Mock user list data
-   */
-  users = [
-    { fistName: 'John', email: 'John@gmail.com' },
-    { fistName: 'Jane', email: 'Jane@gmail.com' },
-    { fistName: 'Alice', email: 'Alice@gmail.com' },
-  ];
-
-  /**
    * Create UsersService instance
    * @param authService authentication service for verifying login status
    */
@@ -85,11 +76,7 @@ export class UsersService {
         throw Exceptions.uniqueConflict('email');
       }
 
-      this.logger.error(
-        'Unexpected error creating user',
-        err instanceof Error ? err.stack : String(err),
-      );
-      throw Exceptions.unexpected();
+      throw Exceptions.unexpected(this.logger, err);
     }
   }
 
@@ -104,7 +91,11 @@ export class UsersService {
     const isAuthenticated = this.authService.isAuthenticated();
     console.log('isAuthenticated', isAuthenticated);
     if (isAuthenticated) {
-      return [...this.users];
+      return this.userRepository.find({
+        relations: {
+          posts: true,
+        },
+      });
     }
   }
 
@@ -113,7 +104,17 @@ export class UsersService {
    * @param id user ID
    * @returns user object
    */
-  public async findOneById(id: number) {
-    return await this.userRepository.findOneBy({ id });
+  public async findOneById(id: number): Promise<User> {
+    try {
+      const result = await this.userRepository.findOneBy({ id });
+
+      if (!result) {
+        throw Exceptions.notFound(`${id}`);
+      }
+
+      return result;
+    } catch (err: unknown) {
+      throw Exceptions.unexpected(this.logger, err);
+    }
   }
 }
