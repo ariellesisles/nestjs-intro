@@ -4,6 +4,7 @@ import {
   Inject,
   Injectable,
   Logger,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { GetUsersQueryDto } from '../dto/get-users-query.dto';
 import { AuthService } from '../../auth/providers/auth.service';
@@ -75,8 +76,7 @@ export class UsersService {
       if (isUniqueViolation(err, 'UQ_users_email')) {
         throw Exceptions.uniqueConflict('email');
       }
-
-      throw Exceptions.unexpected(this.logger, err);
+      return new User();
     }
   }
 
@@ -85,17 +85,19 @@ export class UsersService {
    * @param getUsersQueryDto query parameter
    * @returns an array of users object
    */
-  public findAll(getUsersQueryDto: GetUsersQueryDto) {
-    console.log('APP_VERSION:', this.configService.get<string>('APP_VERSION'));
-    console.log('profileConfig:', this.profileConfiguration);
+  public async findAll(getUsersQueryDto: GetUsersQueryDto): Promise<User[]> {
     const isAuthenticated = this.authService.isAuthenticated();
-    console.log('isAuthenticated', isAuthenticated);
     if (isAuthenticated) {
-      return this.userRepository.find({
+      const users = this.userRepository.find({
         relations: {
           posts: true,
         },
       });
+      return users;
+    } else {
+      throw new UnauthorizedException(
+        `Access Denied. Please check credentials`,
+      );
     }
   }
 
@@ -105,16 +107,12 @@ export class UsersService {
    * @returns user object
    */
   public async findOneById(id: number): Promise<User> {
-    try {
-      const result = await this.userRepository.findOneBy({ id });
+    const result = await this.userRepository.findOneBy({ id });
 
-      if (!result) {
-        throw Exceptions.notFound(`${id}`);
-      }
-
-      return result;
-    } catch (err: unknown) {
-      throw Exceptions.unexpected(this.logger, err);
+    if (!result) {
+      throw Exceptions.notFound('User', id);
     }
+
+    return result;
   }
 }

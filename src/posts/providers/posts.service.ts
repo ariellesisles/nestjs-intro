@@ -1,4 +1,4 @@
-import { Body, Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { CreatePostDto } from '../dtos/create-post.dto';
 import { PatchPostDto } from '../dtos/patch-post.dto';
 import { MetaOption } from '../../meta-options/meta-option.entity';
@@ -8,12 +8,14 @@ import { Post } from '../post.entity';
 import { UsersService } from '../../users/providers/users.service';
 import { TagsService } from '../../tags/providers/tags.service';
 import { deleteEntity } from '../../common/utils/delete-entity.util';
+import { Exceptions } from '../../common/exceptions/http-exceptions';
 
 /**
  * Post  Service
  */
 @Injectable()
 export class PostsService {
+  private readonly logger = new Logger(PostsService.name);
   /**
    * Inject {metaOptionRepository, postRepository, usersService, tagService, postsService}
    * @param metaOptionRepository
@@ -59,26 +61,27 @@ export class PostsService {
    * @param createPostDto
    * @returns Post
    */
-  public async create(@Body() createPostDto: CreatePostDto): Promise<Post> {
+  public async create(createPostDto: CreatePostDto): Promise<Post> {
     // Destructure DTO
     const { authorId, tags, ...postDto } = createPostDto;
 
     //Find authorId exists in users table
-    let author = await this.usersService.findOneById(authorId);
+    const author = await this.usersService.findOneById(authorId);
 
     if (!author) {
-      throw new NotFoundException(`User with ID ${authorId} not found`);
+      throw Exceptions.notFound('User', authorId);
     }
     // Find Tags
-    const tagIds = tags ? await this.tagService.findMultipleTags(tags) : [];
+    const postTags = tags?.length
+      ? await this.tagService.findMultipleTags(tags)
+      : [];
 
     //Create Post
     const post = this.postRepository.create({
       ...postDto,
       author,
-      tags: tagIds,
+      tags: postTags,
     });
-
     //Save and return post
     return this.postRepository.save(post);
   }

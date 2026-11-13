@@ -1,4 +1,4 @@
-  import {
+import {
   Column,
   Entity,
   JoinTable,
@@ -6,6 +6,7 @@
   ManyToOne,
   OneToOne,
   PrimaryGeneratedColumn,
+  Unique,
 } from 'typeorm';
 import { PostStatus } from './enums/post-status.enum';
 import { PostType } from './enums/post-type.enum';
@@ -14,6 +15,7 @@ import { User } from '../users/user.entity';
 import { Tag } from '../tags/tag.entity';
 
 @Entity()
+@Unique('UQ_posts_slug', ['slug'])
 export class Post {
   @PrimaryGeneratedColumn()
   id: number;
@@ -37,7 +39,6 @@ export class Post {
     type: 'varchar',
     length: 255,
     nullable: false,
-    unique: true,
   })
   slug: string;
 

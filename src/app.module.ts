@@ -15,6 +15,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { databaseConfig } from './config/database.config';
 import appConfig from './config/app.config';
 import environmentValidation from './config/environment.validation';
+import { APP_FILTER } from '@nestjs/core';
+import { GlobalExceptionFilter } from './common/filters/global-exception.filter';
 
 const ENV = process.env.NODE_ENV;
 
@@ -24,7 +26,7 @@ const ENV = process.env.NODE_ENV;
     UsersModule,
     PostsModule,
     ConfigModule.forRoot({
-      isGlobal: true, // ConfigModule will be able to all modules
+      isGlobal: true, // ConfigModule will be available to all modules
       envFilePath: !ENV ? '.env' : `.env.${ENV}`,
       load: [appConfig, databaseConfig],
       validationSchema: environmentValidation,
@@ -50,6 +52,9 @@ const ENV = process.env.NODE_ENV;
     MetaOptionsModule,
   ], // import all the module in your nestJS
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    { provide: APP_FILTER, useClass: GlobalExceptionFilter }, // Application-wide Exception handling
+  ],
 })
 export class AppModule {}

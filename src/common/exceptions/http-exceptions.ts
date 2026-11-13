@@ -1,7 +1,5 @@
 import {
   ConflictException,
-  InternalServerErrorException,
-  Logger,
   NotFoundException,
 } from '@nestjs/common';
 
@@ -17,16 +15,13 @@ export const Exceptions = {
     );
   },
 
-  notFound(resource: string): NotFoundException {
-    return new NotFoundException(`${resource} not found`);
-  },
+  notFound(resource: string, identifier?: string | number): NotFoundException {
+    const message =
+      identifier !== undefined
+        ? `${resource} with ID ${identifier} not found`
+        : `${resource} not found`;
 
-  unexpected(logger: Logger, err: unknown): InternalServerErrorException {
-    logger.error('An unexpected error occurred', this.getErrorDetails(err));
-
-    return new InternalServerErrorException(
-      'Unable to process your request. Please try again later.',
-    );
+    return new NotFoundException(message);
   },
 
   getErrorDetails(err: unknown): string {
