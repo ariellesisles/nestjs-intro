@@ -1,0 +1,30 @@
+POST http://localhost:3000/users
+CONTENT-Type: application/json
+
+{
+    "firstName": "test$321",
+    "lastName": "Doe",
+    "email":"janedoe@gmail.com",
+    "password": "P@ssw0rd"
+}
+
+
+POST http://localhost:3000/users/create-many
+CONTENT-Type: application/json
+
+{
+  "users": [
+    {
+      "firstName": "",
+      "lastName": "",
+      "email": "janinesisles4@gmail.com",
+      "password": "P@ssw0rd"
+    },
+    {
+      "firstName": "marwem",
+      "lastName": "marwem",
+      "email": "janinesisles2@gmail.com",
+      "password": "P@ssw0rd"
+    }
+  ]
+}

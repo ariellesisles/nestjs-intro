@@ -16,6 +16,7 @@ import { PatchUserDto } from './dto/patch-user.dto';
 import { UsersService } from './providers/users.service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { User } from './user.entity';
+import { CreateUsersDto } from './dto/create-users.dto';
 
 /**
  * Users Controller
@@ -87,6 +88,16 @@ export class UsersController {
   @ApiResponse({ status: 500, description: 'Unexpected error' })
   public createUser(@Body() createUserDto: CreateUserDto): Promise<User> {
     return this.usersService.create(createUserDto);
+  }
+
+  /**
+   * Create Multiple users endpoint
+   * @param dto An array of CreateUserDto
+   * @returns An Array of User Entity
+   */
+  @Post('create-many')
+  public createMany(@Body() dto: CreateUsersDto): Promise<User[]> {
+    return this.usersService.createMany(dto);
   }
 
   /**

@@ -10,7 +10,6 @@ import { GetUsersQueryDto } from '../dto/get-users-query.dto';
 import { AuthService } from '../../auth/providers/auth.service';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../user.entity';
-import { Repository } from 'typeorm';
 import { CreateUserDto } from '../dto/create-user.dto';
 import { ConfigService } from '@nestjs/config';
 import type { ConfigType } from '@nestjs/config';
@@ -18,6 +17,9 @@ import profileConfig from '../config/profile.config';
 import { Exceptions } from '../../common/exceptions/http-exceptions';
 import { isUniqueViolation } from '../../common/exceptions/database-errors';
 import { PasswordService } from '../../common/security/password.service';
+import { UserCreateManyProvider } from './user-create-many.provider';
+import { Repository } from 'typeorm';
+import { CreateUsersDto } from '../dto/create-users.dto';
 /**
  * Users Service
  */
@@ -38,6 +40,7 @@ export class UsersService {
     @Inject(profileConfig.KEY)
     private readonly profileConfiguration: ConfigType<typeof profileConfig>,
     private readonly passwordService: PasswordService,
+    private readonly userCreateManyProvider: UserCreateManyProvider,
   ) {}
 
   /**
@@ -78,6 +81,14 @@ export class UsersService {
       }
       return new User();
     }
+  }
+  /**
+   * Create multiple users
+   * @param dto
+   * @returns An array of User Entity
+   */
+  public async createMany(dto: CreateUsersDto): Promise<User[]> {
+    return this.userCreateManyProvider.createMany(dto);
   }
 
   /**

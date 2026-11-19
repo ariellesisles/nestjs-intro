@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
+  IsAlpha,
   IsEmail,
   IsNotEmpty,
   IsString,
@@ -16,6 +17,7 @@ export class CreateUserDto {
   @IsNotEmpty()
   @MinLength(3)
   @MaxLength(96)
+  @IsAlpha('en-US')
   firstName: string;
 
   @ApiProperty({
@@ -25,6 +27,7 @@ export class CreateUserDto {
   @IsNotEmpty()
   @MinLength(3)
   @MaxLength(96)
+  @IsAlpha('en-US')
   lastName: string;
 
   @ApiProperty({
