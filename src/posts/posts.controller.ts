@@ -13,6 +13,7 @@ import { PostsService } from './providers/posts.service';
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreatePostDto } from './dtos/create-post.dto';
 import { PatchPostDto } from './dtos/patch-post.dto';
+import { GetPostsDto } from './dtos/get-post.dto';
 
 /**
  * Post Controller
@@ -47,7 +48,11 @@ export class PostsController {
     status: 404,
     description: 'Post not found',
   })
-  public getPostsById(@Param('id') id: number) {
+  public getPostsById(
+    @Param('id') id: number,
+    @Query() postQuery: GetPostsDto,
+  ) {
+    console.log('postQuery', postQuery);
     return this.postsService.findPostById(id);
   }
 
@@ -63,7 +68,8 @@ export class PostsController {
     description: 'Successfully fetch posts',
   })
   @Get()
-  public getPosts() {
+  public getPosts(@Query() postQuery: GetPostsDto) {
+    console.log('getAll', postQuery);
     return this.postsService.findAll();
   }
 

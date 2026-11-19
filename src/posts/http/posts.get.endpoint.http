@@ -1,4 +1,17 @@
+### Get paginated posts with date range
+
+{{
+const now = new Date().toISOString();
+exports.startDate = now;
+exports.endDate = now;
+}}
+
+
 GET http://localhost:3000/posts/1
 
 
 GET http://localhost:3000/posts
+?startDate={{$datetime iso8601}}
+&endDate={{$datetime iso8601}}
+&limit=10
+&page=1
