@@ -20,6 +20,7 @@ import { PasswordService } from '../../common/security/password.service';
 import { UserCreateManyProvider } from './user-create-many.provider';
 import { Repository } from 'typeorm';
 import { CreateUsersDto } from '../dto/create-users.dto';
+import { UserResponseDto } from '../dto/user-response.dto';
 /**
  * Users Service
  */
@@ -53,7 +54,7 @@ export class UsersService {
    * @param createUserDto
    * @returns User
    */
-  public async create(dto: CreateUserDto): Promise<User> {
+  public async create(dto: CreateUserDto): Promise<UserResponseDto> {
     const email = dto.email.trim().toLowerCase();
 
     // 1. UX pre-check — NOT for correctness (DB constraint is the guard)
@@ -72,14 +73,24 @@ export class UsersService {
         email,
         password: await this.passwordService.hash(dto.password),
       });
-      return await this.userRepository.save(user);
+      const savedUser = await this.userRepository.save(user);
+
+      return {
+        id: savedUser.id,
+        firstName: savedUser.firstName,
+        lastName: savedUser.lastName,
+        email: savedUser.email,
+      };
     } catch (err: unknown) {
       if (err instanceof HttpException) throw err;
 
       if (isUniqueViolation(err, 'UQ_users_email')) {
         throw Exceptions.uniqueConflict('email');
       }
-      return new User();
+      this.logger.error(
+        `create user failed: ${Exceptions.getErrorDetails(err)}`,
+      );
+      throw Exceptions.toHttpException(err, 'User');
     }
   }
   /**
@@ -87,7 +98,7 @@ export class UsersService {
    * @param dto
    * @returns An array of User Entity
    */
-  public async createMany(dto: CreateUsersDto): Promise<User[]> {
+  public async createMany(dto: CreateUsersDto): Promise<UserResponseDto[]> {
     return this.userCreateManyProvider.createMany(dto);
   }
 

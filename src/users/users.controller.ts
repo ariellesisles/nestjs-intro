@@ -17,6 +17,7 @@ import { UsersService } from './providers/users.service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { User } from './user.entity';
 import { CreateUsersDto } from './dto/create-users.dto';
+import { UserResponseDto } from './dto/user-response.dto';
 
 /**
  * Users Controller
@@ -77,16 +78,21 @@ export class UsersController {
    * @throws {BadRequestException} When required body fields are missing or invalid.
    */
   @Post()
-  @ApiOperation({ summary: 'Create a new user' })
+  @ApiOperation({
+    summary: 'Create a new user',
+    description: 'Validate and create user',
+  })
   @ApiResponse({
     status: 201,
-    description: 'User successfully created',
-    type: User,
+    description: 'Created',
+    type: UserResponseDto,
   })
   @ApiResponse({ status: 400, description: 'Bad Request / Validation failed' })
   @ApiResponse({ status: 409, description: 'Email already in use' })
   @ApiResponse({ status: 500, description: 'Unexpected error' })
-  public createUser(@Body() createUserDto: CreateUserDto): Promise<User> {
+  public createUser(
+    @Body() createUserDto: CreateUserDto,
+  ): Promise<UserResponseDto> {
     return this.usersService.create(createUserDto);
   }
 
@@ -96,7 +102,18 @@ export class UsersController {
    * @returns An Array of User Entity
    */
   @Post('create-many')
-  public createMany(@Body() dto: CreateUsersDto): Promise<User[]> {
+  @ApiOperation({
+    summary: 'Create multiple user',
+    description: `Validates and creates multiple user accounts atomically. 
+      Returns the created users with status 201 Created; 
+      rolls back all inserts if any item fails validation 
+      or violates a unique constraint.`,
+  })
+  @ApiResponse({ status: 201, description: 'Created', type: [UserResponseDto] })
+  @ApiResponse({ status: 400, description: 'Bad Request / Validation failed' })
+  @ApiResponse({ status: 409, description: 'Conflict' })
+  @ApiResponse({ status: 500, description: 'Unexpected error' })
+  public createMany(@Body() dto: CreateUsersDto): Promise<UserResponseDto[]> {
     return this.usersService.createMany(dto);
   }
 

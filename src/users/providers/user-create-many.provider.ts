@@ -5,6 +5,7 @@ import { Exceptions } from '../../common/exceptions/http-exceptions';
 import { CreateUsersDto } from '../dto/create-users.dto';
 import { CreateUserDto } from '../dto/create-user.dto';
 import { PasswordService } from '../../common/security/password.service';
+import { UserResponseDto } from '../dto/user-response.dto';
 
 @Injectable()
 export class UserCreateManyProvider {
@@ -15,7 +16,7 @@ export class UserCreateManyProvider {
     private readonly passwordService: PasswordService,
   ) {}
 
-  public async createMany(dto: CreateUsersDto): Promise<User[]> {
+  public async createMany(dto: CreateUsersDto): Promise<UserResponseDto[]> {
     const users = dto.users;
 
     if (!users?.length) {
@@ -54,7 +55,14 @@ export class UserCreateManyProvider {
 
         // 2. Create & save atomically
         const entities = normalizedDtos.map((dto) => manager.create(User, dto));
-        return await manager.save(User, entities);
+        const savedUsers = await manager.save(User, entities);
+
+        return savedUsers.map((user) => ({
+          id: user.id,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          email: user.email,
+        }));
       });
     } catch (err) {
       this.logger.error(
