@@ -20,5 +20,5 @@ GET http://localhost:3000/posts
 GET http://localhost:3000/posts/author/17
 ?startDate={{$datetime iso8601}}
 &endDate={{$datetime iso8601}}
-&limit=3
+&limit=1
 &page=1
