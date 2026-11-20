@@ -11,6 +11,7 @@ import { deleteEntity } from '../../common/utils/delete-entity.util';
 import { Exceptions } from '../../common/exceptions/http-exceptions';
 import { GetPostsDto } from '../dtos/get-post.dto';
 import { PaginationProvider } from '../../common/pagination/providers/pagination.provider';
+import { Paginated } from '../../common/pagination/interfaces/paginated.interface';
 
 /**
  * Post  Service
@@ -46,7 +47,10 @@ export class PostsService {
     return this.postRepository.findOneBy({ id });
   }
 
-  public async findPostByAuthorId(authorId: number, dto: GetPostsDto) {
+  public async findPostByAuthorId(
+    authorId: number,
+    dto: GetPostsDto,
+  ): Promise<Paginated<Post>> {
     return this.paginationProvider.paginateQuery(
       {
         where: {
@@ -67,7 +71,7 @@ export class PostsService {
    * Find all Post
    * @returns Post object
    */
-  public async findAll(dto: GetPostsDto) {
+  public async findAll(dto: GetPostsDto): Promise<Paginated<Post>> {
     return this.paginationProvider.paginateQuery(
       {
         relations: {
