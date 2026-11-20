@@ -29,6 +29,8 @@ export class PasswordService {
    * @returns true if they match
    */
   verify(password: string, hashPassword: string): Promise<boolean> {
+    console.log(password)
+    console.log(hashPassword)
     return bcrpyt.compare(password, hashPassword);
   }
 }

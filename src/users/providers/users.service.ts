@@ -1,6 +1,5 @@
 import {
   forwardRef,
-  HttpException,
   Inject,
   Injectable,
   Logger,
@@ -11,16 +10,13 @@ import { AuthService } from '../../auth/providers/auth.service';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../user.entity';
 import { CreateUserDto } from '../dto/create-user.dto';
-import { ConfigService } from '@nestjs/config';
-import type { ConfigType } from '@nestjs/config';
 import profileConfig from '../config/profile.config';
 import { Exceptions } from '../../common/exceptions/http-exceptions';
-import { isUniqueViolation } from '../../common/exceptions/database-errors';
-import { PasswordService } from '../../common/security/password.service';
 import { UserCreateManyProvider } from './user-create-many.provider';
 import { Repository } from 'typeorm';
 import { CreateUsersDto } from '../dto/create-users.dto';
 import { UserResponseDto } from '../dto/user-response.dto';
+import { UserCreateProvider } from './user-create.provider';
 /**
  * Users Service
  */
@@ -37,11 +33,9 @@ export class UsersService {
     private readonly authService: AuthService,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-    private readonly configService: ConfigService,
     @Inject(profileConfig.KEY)
-    private readonly profileConfiguration: ConfigType<typeof profileConfig>,
-    private readonly passwordService: PasswordService,
     private readonly userCreateManyProvider: UserCreateManyProvider,
+    private readonly userCreateProvider: UserCreateProvider,
   ) {}
 
   /**
@@ -55,43 +49,7 @@ export class UsersService {
    * @returns User
    */
   public async create(dto: CreateUserDto): Promise<UserResponseDto> {
-    const email = dto.email.trim().toLowerCase();
-
-    // 1. UX pre-check — NOT for correctness (DB constraint is the guard)
-    const existing = await this.userRepository.findOne({
-      where: { email },
-      select: { id: true },
-    });
-    if (existing) {
-      throw Exceptions.uniqueConflict('email');
-    }
-
-    // 2. Insert — named DB constraint is the source of truth
-    try {
-      const user = this.userRepository.create({
-        ...dto,
-        email,
-        password: await this.passwordService.hash(dto.password),
-      });
-      const savedUser = await this.userRepository.save(user);
-
-      return {
-        id: savedUser.id,
-        firstName: savedUser.firstName,
-        lastName: savedUser.lastName,
-        email: savedUser.email,
-      };
-    } catch (err: unknown) {
-      if (err instanceof HttpException) throw err;
-
-      if (isUniqueViolation(err, 'UQ_users_email')) {
-        throw Exceptions.uniqueConflict('email');
-      }
-      this.logger.error(
-        `create user failed: ${Exceptions.getErrorDetails(err)}`,
-      );
-      throw Exceptions.toHttpException(err, 'User');
-    }
+    return this.userCreateProvider.createUser(dto);
   }
   /**
    * Create multiple users
@@ -135,6 +93,19 @@ export class UsersService {
       throw Exceptions.notFound('User', id);
     }
 
+    return result;
+  }
+
+  public async getPasswordByEmail(email: string) {
+    const result = await this.userRepository.findOne({
+      where: { email },
+      select: {
+        password: true,
+      },
+    });
+    if (!result) {
+      throw Exceptions.notFound('User', email);
+    }
     return result;
   }
 }

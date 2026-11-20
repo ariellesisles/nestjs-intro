@@ -8,11 +8,17 @@ import { ConfigModule } from '@nestjs/config';
 import profileConfig from './config/profile.config';
 import { PasswordService } from '../common/security/password.service';
 import { UserCreateManyProvider } from './providers/user-create-many.provider';
+import { UserCreateProvider } from './providers/user-create.provider';
 
 @Module({
   controllers: [UsersController],
-  providers: [UsersService, PasswordService, UserCreateManyProvider],
-  exports: [UsersService],
+  providers: [
+    UsersService,
+    PasswordService,
+    UserCreateManyProvider,
+    UserCreateProvider,
+  ],
+  exports: [UsersService, PasswordService],
   imports: [
     forwardRef(() => AuthModule),
     TypeOrmModule.forFeature([User]),
