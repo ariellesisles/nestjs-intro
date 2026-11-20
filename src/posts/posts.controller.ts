@@ -48,11 +48,7 @@ export class PostsController {
     status: 404,
     description: 'Post not found',
   })
-  public getPostsById(
-    @Param('id') id: number,
-    @Query() postQuery: GetPostsDto,
-  ) {
-    console.log('postQuery', postQuery);
+  public getPostsById(@Param('id') id: number) {
     return this.postsService.findPostById(id);
   }
 
@@ -69,8 +65,15 @@ export class PostsController {
   })
   @Get()
   public getPosts(@Query() postQuery: GetPostsDto) {
-    console.log('getAll', postQuery);
-    return this.postsService.findAll();
+    return this.postsService.findAll(postQuery);
+  }
+
+  @Get('author/:authorId')
+  public getPostsByAuthorId(
+    @Param('authorId', ParseIntPipe) authorId: number,
+    @Query() postQuery: GetPostsDto,
+  ) {
+    return this.postsService.findPostByAuthorId(authorId, postQuery);
   }
 
   /**

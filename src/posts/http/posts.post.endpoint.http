@@ -2,18 +2,18 @@ POST http://localhost:3000/posts
 Content-Type: application/json
 
 
-{
-  "title":"nestjs",
-  "postType": "post" ,
-  "slug": "nest-js-2",
-  "status": "draft",
-  "content": "test content",
-   "schema": "{\r\n    \"name\": \"Test Name\",\r\n    \"language\": \"English\"\r\n}",
-  "featuredImageUrl": "https://unsplash.com/photos/woman-at-the-controls-of-a-skid-steer-XHnS6_Q2_jo",
-  "publishedOn": "2026-11-09T23:08:01-08:00",
-  "metaOptions": {
-    "metaValue": "{\"forBeginner\": true}"
-  },
-  "authorId": 17,
-  "tags": [1,2, 3]
-}
+ {
+    "title": "Deploying NestJS Applications to Production",
+    "postType": "post",
+    "slug": "deploying-nestjs-applications-to-production",
+    "status": "draft",
+    "content": "A practical guide to preparing, configuring, and deploying NestJS applications to production environments.",
+    "schema": "{\"name\":\"NestJS Deployment\",\"language\":\"English\"}",
+    "featuredImageUrl": "https://images.unsplash.com/photo-1451187580459-43490279c0fa",
+    "publishedOn": "2026-11-18T09:30:00+08:00",
+    "metaOptions": {
+      "metaValue": "{\"forBeginner\": false}"
+    },
+    "authorId": 17,
+    "tags": [3, 6, 7]
+  }

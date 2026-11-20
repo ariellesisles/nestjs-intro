@@ -5,11 +5,14 @@ import {
   Entity,
   ManyToMany,
   PrimaryGeneratedColumn,
+  Unique,
   UpdateDateColumn,
 } from 'typeorm';
 import { Post } from '../posts/post.entity';
 
 @Entity()
+@Unique('UQ_tag_name', ['name'])
+@Unique('UQ_tag_slug', ['slug'])
 export class Tag {
   @PrimaryGeneratedColumn()
   id: number;
@@ -18,14 +21,12 @@ export class Tag {
     type: 'varchar',
     length: 255,
     nullable: false,
-    unique: true,
   })
   name: string;
   @Column({
     type: 'varchar',
     length: 255,
     nullable: false,
-    unique: true,
   })
   slug: string;
   @Column({
