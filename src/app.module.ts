@@ -17,6 +17,7 @@ import appConfig from './config/app.config';
 import environmentValidation from './config/environment.validation';
 import { APP_FILTER } from '@nestjs/core';
 import { GlobalExceptionFilter } from './common/filters/global-exception.filter';
+import { PaginationModule } from './common/pagination/pagination.module';
 
 const ENV = process.env.NODE_ENV;
 
@@ -50,6 +51,7 @@ const ENV = process.env.NODE_ENV;
     }),
     TagsModule,
     MetaOptionsModule,
+    PaginationModule,
   ], // import all the module in your nestJS
   controllers: [AppController],
   providers: [

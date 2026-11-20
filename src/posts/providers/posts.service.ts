@@ -3,13 +3,14 @@ import { CreatePostDto } from '../dtos/create-post.dto';
 import { PatchPostDto } from '../dtos/patch-post.dto';
 import { MetaOption } from '../../meta-options/meta-option.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DataSource, FindManyOptions, Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { Post } from '../post.entity';
 import { UsersService } from '../../users/providers/users.service';
 import { TagsService } from '../../tags/providers/tags.service';
 import { deleteEntity } from '../../common/utils/delete-entity.util';
 import { Exceptions } from '../../common/exceptions/http-exceptions';
 import { GetPostsDto } from '../dtos/get-post.dto';
+import { PaginationProvider } from '../../common/pagination/providers/pagination.provider';
 
 /**
  * Post  Service
@@ -33,6 +34,7 @@ export class PostsService {
     private readonly usersService: UsersService,
     private readonly tagService: TagsService,
     private readonly datasource: DataSource,
+    private readonly paginationProvider: PaginationProvider,
   ) {}
 
   /**
@@ -45,7 +47,7 @@ export class PostsService {
   }
 
   public async findPostByAuthorId(authorId: number, dto: GetPostsDto) {
-    return this.paginatePosts(
+    return this.paginationProvider.paginateQuery(
       {
         where: {
           author: { id: authorId },
@@ -57,6 +59,7 @@ export class PostsService {
         },
       },
       dto,
+      this.postRepository,
     );
   }
 
@@ -65,7 +68,7 @@ export class PostsService {
    * @returns Post object
    */
   public async findAll(dto: GetPostsDto) {
-    return this.paginatePosts(
+    return this.paginationProvider.paginateQuery(
       {
         relations: {
           author: true,
@@ -77,6 +80,7 @@ export class PostsService {
         },
       },
       dto,
+      this.postRepository,
     );
   }
   /**
@@ -165,36 +169,5 @@ export class PostsService {
    */
   public async delete(id: number): Promise<{ deleted: true; id: number }> {
     return deleteEntity(this.postRepository, id, 'Post');
-  }
-
-  /**
-   * Pagination Helper
-   * @param options
-   * @param queryDto
-   * @returns A list of post with pagination and limit
-   */
-  private async paginatePosts(
-    options: FindManyOptions<Post>,
-    queryDto: GetPostsDto,
-  ) {
-    const { page = 1, limit = 10 } = queryDto;
-
-    const [posts, total] = await this.postRepository.findAndCount({
-      ...options,
-      skip: (page - 1) * limit,
-      take: limit,
-    });
-
-    return {
-      data: posts,
-      meta: {
-        total,
-        page,
-        limit,
-        totalPages: Math.ceil(total / limit),
-        hasNextPage: page * limit < total,
-        hasPreviousPage: page > 1,
-      },
-    };
   }
 }
