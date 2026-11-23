@@ -9,6 +9,8 @@ import profileConfig from './config/profile.config';
 import { PasswordService } from '../common/security/password.service';
 import { UserCreateManyProvider } from './providers/user-create-many.provider';
 import { UserCreateProvider } from './providers/user-create.provider';
+import { JwtModule } from '@nestjs/jwt';
+import jwtConfig from '../auth/config/jwt.config';
 
 @Module({
   controllers: [UsersController],
@@ -23,6 +25,8 @@ import { UserCreateProvider } from './providers/user-create.provider';
     forwardRef(() => AuthModule),
     TypeOrmModule.forFeature([User]),
     ConfigModule.forFeature(profileConfig),
+    ConfigModule.forFeature(jwtConfig),
+    JwtModule.registerAsync(jwtConfig.asProvider()),
   ],
 })
 export class UsersModule {}

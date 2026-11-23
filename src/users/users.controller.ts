@@ -7,6 +7,7 @@ import {
   Patch,
   Post,
   Query,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -18,6 +19,7 @@ import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { User } from './user.entity';
 import { CreateUsersDto } from './dto/create-users.dto';
 import { UserResponseDto } from './dto/user-response.dto';
+import { AccessTokenGuard } from '../auth/guards/access-token/access-token.guard';
 
 /**
  * Users Controller
@@ -101,6 +103,8 @@ export class UsersController {
    * @param dto An array of CreateUserDto
    * @returns An Array of User Entity
    */
+
+  @UseGuards(AccessTokenGuard)
   @Post('create-many')
   @ApiOperation({
     summary: 'Create multiple user',

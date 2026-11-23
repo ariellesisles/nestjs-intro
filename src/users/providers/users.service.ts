@@ -10,7 +10,6 @@ import { AuthService } from '../../auth/providers/auth.service';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../user.entity';
 import { CreateUserDto } from '../dto/create-user.dto';
-import profileConfig from '../config/profile.config';
 import { Exceptions } from '../../common/exceptions/http-exceptions';
 import { UserCreateManyProvider } from './user-create-many.provider';
 import { Repository } from 'typeorm';
@@ -33,7 +32,6 @@ export class UsersService {
     private readonly authService: AuthService,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-    @Inject(profileConfig.KEY)
     private readonly userCreateManyProvider: UserCreateManyProvider,
     private readonly userCreateProvider: UserCreateProvider,
   ) {}
