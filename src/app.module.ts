@@ -15,9 +15,12 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { databaseConfig } from './config/database.config';
 import appConfig from './config/app.config';
 import environmentValidation from './config/environment.validation';
-import { APP_FILTER } from '@nestjs/core';
+import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 import { GlobalExceptionFilter } from './common/filters/global-exception.filter';
 import { PaginationModule } from './common/pagination/pagination.module';
+import jwtConfig from './auth/config/jwt.config';
+import { JwtModule } from '@nestjs/jwt';
+import { AuthenticationGuard } from './auth/guards/authentication/authentication.guard';
 
 const ENV = process.env.NODE_ENV;
 
@@ -26,12 +29,20 @@ const ENV = process.env.NODE_ENV;
     AuthModule,
     UsersModule,
     PostsModule,
+    TagsModule,
+    MetaOptionsModule,
+    PaginationModule,
+    //Validate environment variables
     ConfigModule.forRoot({
       isGlobal: true, // ConfigModule will be available to all modules
       envFilePath: !ENV ? '.env' : `.env.${ENV}`,
       load: [appConfig, databaseConfig],
       validationSchema: environmentValidation,
     }),
+    //Enable jwtConfig
+    ConfigModule.forFeature(jwtConfig),
+    JwtModule.registerAsync(jwtConfig.asProvider()),
+    // Initialize TypeOrm
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -49,14 +60,16 @@ const ENV = process.env.NODE_ENV;
         entities: [User, Post, MetaOption, Tag],
       }),
     }),
-    TagsModule,
-    MetaOptionsModule,
-    PaginationModule,
   ], // import all the module in your nestJS
   controllers: [AppController],
   providers: [
     AppService,
     { provide: APP_FILTER, useClass: GlobalExceptionFilter }, // Application-wide Exception handling
+    {
+      // Implement Application-wide Guard
+      provide: APP_GUARD,
+      useClass: AuthenticationGuard,
+    },
   ],
 })
 export class AppModule {}

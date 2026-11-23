@@ -7,7 +7,6 @@ import {
   Patch,
   Post,
   Query,
-  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -19,7 +18,8 @@ import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { User } from './user.entity';
 import { CreateUsersDto } from './dto/create-users.dto';
 import { UserResponseDto } from './dto/user-response.dto';
-import { AccessTokenGuard } from '../auth/guards/access-token/access-token.guard';
+import { Auth } from '../auth/decorator/auth.decorator';
+import { AuthType } from '../auth/enums/auth-type.enum';
 
 /**
  * Users Controller
@@ -80,6 +80,7 @@ export class UsersController {
    * @throws {BadRequestException} When required body fields are missing or invalid.
    */
   @Post()
+  @Auth(AuthType.None)
   @ApiOperation({
     summary: 'Create a new user',
     description: 'Validate and create user',
@@ -104,7 +105,6 @@ export class UsersController {
    * @returns An Array of User Entity
    */
 
-  @UseGuards(AccessTokenGuard)
   @Post('create-many')
   @ApiOperation({
     summary: 'Create multiple user',
