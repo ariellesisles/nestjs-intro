@@ -1,8 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import * as bcrpyt from 'bcrypt';
+import * as bcrypt from 'bcrypt';
 @Injectable()
 export class PasswordService {
+  private readonly logger = new Logger(PasswordService.name);
+
   private readonly cost: number;
 
   /**
@@ -19,7 +21,7 @@ export class PasswordService {
    * @returns A string of hash password
    */
   hash(password: string): Promise<string> {
-    return bcrpyt.hash(password, this.cost);
+    return bcrypt.hash(password, this.cost);
   }
 
   /**
@@ -28,9 +30,22 @@ export class PasswordService {
    * @param hashPassword stored bcrypt password
    * @returns true if they match
    */
-  verify(password: string, hashPassword: string): Promise<boolean> {
-    console.log(password)
-    console.log(hashPassword)
-    return bcrpyt.compare(password, hashPassword);
+  public async verify(
+    password: string,
+    hashPassword: string | null | undefined,
+  ): Promise<boolean> {
+    if (!hashPassword) {
+      return false;
+    }
+
+    try {
+      return await bcrypt.compare(password, hashPassword);
+    } catch (err) {
+      this.logger.error(
+        'Failed to verify password hash',
+        err instanceof Error ? err.stack : undefined,
+      );
+      return false;
+    }
   }
 }

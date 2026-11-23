@@ -96,11 +96,14 @@ export class UsersService {
     return result;
   }
 
-  public async getPasswordByEmail(email: string) {
+  public async findForAuthByEmail(email: string) {
+    const normalizedEmail = email.trim().toLowerCase();
     const result = await this.userRepository.findOne({
-      where: { email },
+      where: { email: normalizedEmail },
       select: {
+        id: true,
         password: true,
+        email: true,
       },
     });
     if (!result) {

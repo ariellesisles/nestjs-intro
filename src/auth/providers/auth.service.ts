@@ -2,7 +2,6 @@ import {
   Injectable,
   forwardRef,
   Inject,
-  RequestTimeoutException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { UsersService } from '../../users/providers/users.service';
@@ -10,6 +9,15 @@ import { CreateUserDto } from '../../users/dto/create-user.dto';
 import { UserResponseDto } from '../../users/dto/user-response.dto';
 import { SignInDto } from './dto/sign-in.dto';
 import { PasswordService } from '../../common/security/password.service';
+import { JwtService } from '@nestjs/jwt';
+import type { ConfigType } from '@nestjs/config';
+import jwtConfig from '../config/jwt.config';
+import { randomUUID } from 'node:crypto';
+
+// Precomputed valid bcrypt hash used only to keep response timing consistent
+// when a user record does not exist.
+const DUMMY_BCRYPT_HASH =
+  '$2b$12$C9v8h.2mP6xL4qR1tY7wOuK3nF5gH8jL2pQ6sT9vW1xY4zA7bC0eG';
 
 @Injectable()
 export class AuthService {
@@ -17,27 +25,44 @@ export class AuthService {
     @Inject(forwardRef(() => UsersService))
     private readonly userService: UsersService,
     private readonly passwordService: PasswordService,
+    private readonly jwtService: JwtService,
+    @Inject(jwtConfig.KEY)
+    private readonly jwtConfiguration: ConfigType<typeof jwtConfig>,
   ) {}
 
-  public async login(dto: SignInDto) {
-    const { password, email } = dto;
-
+  public async login(dto: SignInDto): Promise<{ accessToken: string }> {
+    const email = dto.email.trim().toLowerCase();
+    const user = await this.userService.findForAuthByEmail(email);
     let isEqual: boolean = false;
 
-    const user = await this.userService.getPasswordByEmail(email);
-    console.log('user', user);
-    try {
-      isEqual = await this.passwordService.verify(password, user.password);
-    } catch (err) {
-      throw new RequestTimeoutException(err, {
-        description: 'Password Could not match',
-      });
+    const hashToCompare = user?.password ?? DUMMY_BCRYPT_HASH;
+
+    const isPasswordValid = await this.passwordService.verify(
+      dto.password,
+      hashToCompare,
+    );
+
+    if (!user || !isPasswordValid) {
+      throw new UnauthorizedException('Invalid email or password');
     }
 
-    if (!isEqual) {
-      throw new UnauthorizedException('Invalid Username or password');
-    }
-    return isEqual;
+    const payload = {
+      sub: user.id,
+      email: user.email,
+      jti: randomUUID(),
+    };
+
+    // Generate Token
+    const accessToken = await this.jwtService.signAsync(payload, {
+      audience: this.jwtConfiguration.audience,
+      issuer: this.jwtConfiguration.issuer,
+      secret: this.jwtConfiguration.secret,
+      expiresIn: this.jwtConfiguration.acessTokenTtl,
+    });
+
+    return {
+      accessToken,
+    };
   }
 
   public isAuthenticated() {
