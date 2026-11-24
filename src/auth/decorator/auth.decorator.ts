@@ -3,4 +3,4 @@ import { AuthType } from '../enums/auth-type.enum';
 import { AUTH_TYPE_KEY } from '../constants/auth.constants';
 
 export const Auth = (...autTypes: AuthType[]) =>
-  SetMetadata(AUTH_TYPE_KEY, AuthType);
+  SetMetadata(AUTH_TYPE_KEY, autTypes);

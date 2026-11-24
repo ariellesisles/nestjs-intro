@@ -1,8 +1,8 @@
 POST http://localhost:3000/users
 CONTENT-Type: application/json
-
+# Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjE3LCJlbWFpbCI6ImphbmVkb2VAZ21haWwuY29tIiwianRpIjoiZWZiZDliYWUtN2Q0Ni00NjE2LWJkZDgtMzU3ZWVhZmJkZTRiIiwiaWF0IjoxNzk1NTEyNzg4LCJleHAiOjE3OTU1MTYzODgsImF1ZCI6ImxvY2Fob3N0OjMwMDAiLCJpc3MiOiJsb2NhaG9zdDozMDAwIn0.aEQsZs9DWQzrjDMwzx8mYGNdzFu9aIkNXWpJEXE7JRU
 {
-    "firstName": "test$321",
+    "firstName": "test",
     "lastName": "Doe",
     "email":"janedoe@gmail.com",
     "password": "P@ssw0rd"
