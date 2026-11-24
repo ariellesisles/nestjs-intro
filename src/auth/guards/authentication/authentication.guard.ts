@@ -26,8 +26,6 @@ export class AuthenticationGuard implements CanActivate {
   canActivate(
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
-
-    console.log(this.authTypeGuardMap);
     return true;
   }
 }
