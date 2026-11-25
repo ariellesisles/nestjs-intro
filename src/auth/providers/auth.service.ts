@@ -4,6 +4,7 @@ import { CreateUserDto } from '../../users/dto/create-user.dto';
 import { UserResponseDto } from '../../users/dto/user-response.dto';
 import { SignInDto } from '../dtos/sign-in.dto';
 import { SignInProvider } from './sign-in.provider';
+import { AuthTokens } from '../interfaces/auth-tokens.interface';
 
 @Injectable()
 export class AuthService {
@@ -13,7 +14,7 @@ export class AuthService {
     private readonly signinProvider: SignInProvider,
   ) {}
 
-  public async signin(dto: SignInDto): Promise<{ accessToken: string }> {
+  public async signin(dto: SignInDto): Promise<AuthTokens> {
     return this.signinProvider.signIn(dto);
   }
 
