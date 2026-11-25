@@ -7,10 +7,11 @@ import { ConfigModule } from '@nestjs/config';
 import jwtConfig from './config/jwt.config';
 import { JwtModule } from '@nestjs/jwt';
 import { GenerateTokensProvider } from './providers/generate-tokens.provider';
+import { SignInProvider } from './providers/sign-in.provider';
 
 @Module({
   controllers: [AuthController],
-  providers: [AuthService, PasswordService, GenerateTokensProvider],
+  providers: [AuthService, PasswordService, GenerateTokensProvider, SignInProvider],
   exports: [AuthService],
   imports: [
     forwardRef(() => UsersModule),

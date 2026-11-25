@@ -1,12 +1,5 @@
-import {
-  forwardRef,
-  Inject,
-  Injectable,
-  Logger,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { GetUsersQueryDto } from '../dto/get-users-query.dto';
-import { AuthService } from '../../auth/providers/auth.service';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../user.entity';
 import { CreateUserDto } from '../dto/create-user.dto';
@@ -22,14 +15,14 @@ import { UserCreateProvider } from './user-create.provider';
 @Injectable()
 export class UsersService {
   private readonly logger = new Logger(UsersService.name);
+
   /**
-   * Inject AuthService and UserRepository
-   * @param authService
+   *
    * @param userRepository
+   * @param userCreateManyProvider
+   * @param userCreateProvider
    */
   constructor(
-    @Inject(forwardRef(() => AuthService))
-    private readonly authService: AuthService,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     private readonly userCreateManyProvider: UserCreateManyProvider,
@@ -64,19 +57,12 @@ export class UsersService {
    * @returns an array of users object
    */
   public async findAll(getUsersQueryDto: GetUsersQueryDto): Promise<User[]> {
-    const isAuthenticated = this.authService.isAuthenticated();
-    if (isAuthenticated) {
-      const users = this.userRepository.find({
-        relations: {
-          posts: true,
-        },
-      });
-      return users;
-    } else {
-      throw new UnauthorizedException(
-        `Access Denied. Please check credentials`,
-      );
-    }
+    const users = this.userRepository.find({
+      relations: {
+        posts: true,
+      },
+    });
+    return users;
   }
 
   /**
