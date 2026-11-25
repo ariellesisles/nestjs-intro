@@ -18,7 +18,7 @@ import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { User } from './user.entity';
 import { CreateUsersDto } from './dto/create-users.dto';
 import { UserResponseDto } from './dto/user-response.dto';
-import { Auth } from '../auth/decorator/auth.decorator';
+import { Auth } from '../auth/decorators/auth.decorator';
 import { AuthType } from '../auth/enums/auth-type.enum';
 
 /**

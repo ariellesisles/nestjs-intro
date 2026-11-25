@@ -7,12 +7,13 @@ import {
 import { UsersService } from '../../users/providers/users.service';
 import { CreateUserDto } from '../../users/dto/create-user.dto';
 import { UserResponseDto } from '../../users/dto/user-response.dto';
-import { SignInDto } from './dto/sign-in.dto';
+import { SignInDto } from '../dtos/sign-in.dto';
 import { PasswordService } from '../../common/security/password.service';
 import { JwtService } from '@nestjs/jwt';
 import type { ConfigType } from '@nestjs/config';
 import jwtConfig from '../config/jwt.config';
 import { randomUUID } from 'node:crypto';
+import { ActiveUserData } from '../interfaces/active-user-data.interface';
 
 // Precomputed valid bcrypt hash used only to keep response timing consistent
 // when a user record does not exist.
@@ -50,7 +51,7 @@ export class AuthService {
       sub: user.id,
       email: user.email,
       jti: randomUUID(),
-    };
+    } as ActiveUserData;
 
     // Generate Token
     const accessToken = await this.jwtService.signAsync(payload, {

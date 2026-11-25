@@ -1,19 +1,20 @@
 POST http://localhost:3000/posts
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjE3LCJlbWFpbCI6ImphbmVkb2VAZ21haWwuY29tIiwianRpIjoiMmNjZTAxYWYtMmNhNC00M2IzLThkNDUtNDk3YTZlZDYyYWYzIiwiaWF0IjoxNzk1NTg0NTA5LCJleHAiOjE3OTU1ODgxMDksImF1ZCI6ImxvY2Fob3N0OjMwMDAiLCJpc3MiOiJsb2NhaG9zdDozMDAwIn0.GR-w-SUb22XNIwao2mjI-e-mpjrLYz3sWZ9chRCl6U4
 
 
  {
-    "title": "Deploying NestJS Applications to Production",
+    "title": "Sample Title",
     "postType": "post",
-    "slug": "deploying-nestjs-applications-to-production",
+    "slug": "sample-title",
     "status": "draft",
-    "content": "A practical guide to preparing, configuring, and deploying NestJS applications to production environments.",
-    "schema": "{\"name\":\"NestJS Deployment\",\"language\":\"English\"}",
+    "content": "Sample description",
+    "schema": "{\"name\":\"Sample\",\"language\":\"English\"}",
     "featuredImageUrl": "https://images.unsplash.com/photo-1451187580459-43490279c0fa",
-    "publishedOn": "2026-11-18T09:30:00+08:00",
+    "publishedOn": "2026-11-29T09:30:00+08:00",
     "metaOptions": {
       "metaValue": "{\"forBeginner\": false}"
     },
     "authorId": 17,
-    "tags": [3, 6, 7]
+    "tags": [3]
   }
