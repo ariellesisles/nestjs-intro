@@ -5,13 +5,13 @@ import { MetaOption } from '../../meta-options/meta-option.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Repository } from 'typeorm';
 import { Post } from '../post.entity';
-import { UsersService } from '../../users/providers/users.service';
 import { TagsService } from '../../tags/providers/tags.service';
 import { deleteEntity } from '../../common/utils/delete-entity.util';
-import { Exceptions } from '../../common/exceptions/http-exceptions';
 import { GetPostsDto } from '../dtos/get-post.dto';
 import { PaginationProvider } from '../../common/pagination/providers/pagination.provider';
 import { Paginated } from '../../common/pagination/interfaces/paginated.interface';
+import { CreatePostProvider } from './create-post.provider';
+import { ActiveUserData } from '../../auth/interfaces/active-user-data.interface';
 
 /**
  * Post  Service
@@ -28,14 +28,12 @@ export class PostsService {
    * @param postsService
    */
   constructor(
-    @InjectRepository(MetaOption)
-    private readonly metaOptionRepository: Repository<MetaOption>,
     @InjectRepository(Post)
     private readonly postRepository: Repository<Post>,
-    private readonly usersService: UsersService,
     private readonly tagService: TagsService,
     private readonly datasource: DataSource,
     private readonly paginationProvider: PaginationProvider,
+    private readonly createPostProvider: CreatePostProvider,
   ) {}
 
   /**
@@ -92,29 +90,11 @@ export class PostsService {
    * @param createPostDto
    * @returns Post
    */
-  public async create(createPostDto: CreatePostDto): Promise<Post> {
-    // Destructure DTO
-    const { authorId, tags, ...postDto } = createPostDto;
-
-    //Find authorId exists in users table
-    const author = await this.usersService.findOneById(authorId);
-
-    if (!author) {
-      throw Exceptions.notFound('User', authorId);
-    }
-    // Find Tags
-    const postTags = tags?.length
-      ? await this.tagService.findMultipleTags(tags)
-      : [];
-
-    //Create Post
-    const post = this.postRepository.create({
-      ...postDto,
-      author,
-      tags: postTags,
-    });
-    //Save and return post
-    return this.postRepository.save(post);
+  public async create(
+    createPostDto: CreatePostDto,
+    user: ActiveUserData,
+  ): Promise<Post> {
+    return this.createPostProvider.create(createPostDto, user);
   }
 
   /**

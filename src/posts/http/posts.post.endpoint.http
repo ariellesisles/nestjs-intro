@@ -4,17 +4,16 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjE3LCJlbWFpb
 
 
  {
-    "title": "Sample Title",
+    "title": "Sample Title3",
     "postType": "post",
-    "slug": "sample-title",
+    "slug": "sample-title-3",
     "status": "draft",
     "content": "Sample description",
-    "schema": "{\"name\":\"Sample\",\"language\":\"English\"}",
+    "schema": "{\"name\":\"Sample 3\",\"language\":\"English\"}",
     "featuredImageUrl": "https://images.unsplash.com/photo-1451187580459-43490279c0fa",
     "publishedOn": "2026-11-29T09:30:00+08:00",
     "metaOptions": {
       "metaValue": "{\"forBeginner\": false}"
     },
-    "authorId": 17,
     "tags": [3]
   }
