@@ -4,6 +4,7 @@ import type { ConfigType } from '@nestjs/config';
 import jwtConfig from '../config/jwt.config';
 import { User } from '../../users/user.entity';
 import { ActiveUserData } from '../interfaces/active-user-data.interface';
+import { AuthTokens } from '../interfaces/auth-tokens.interface';
 
 @Injectable()
 export class GenerateTokensProvider {
@@ -29,7 +30,7 @@ export class GenerateTokensProvider {
     );
   }
 
-  public async generateTokens(user: User) {
+  public async generateTokens(user: User): Promise<AuthTokens> {
     const [accessToken, refreshToken] = await Promise.all([
       // Generate acessToken
       this.signToken<Partial<ActiveUserData>>(
