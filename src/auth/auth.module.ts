@@ -6,10 +6,11 @@ import { PasswordService } from '../common/security/password.service';
 import { ConfigModule } from '@nestjs/config';
 import jwtConfig from './config/jwt.config';
 import { JwtModule } from '@nestjs/jwt';
+import { GenerateTokensProvider } from './providers/generate-tokens.provider';
 
 @Module({
   controllers: [AuthController],
-  providers: [AuthService, PasswordService],
+  providers: [AuthService, PasswordService, GenerateTokensProvider],
   exports: [AuthService],
   imports: [
     forwardRef(() => UsersModule),
